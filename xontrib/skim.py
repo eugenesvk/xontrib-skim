@@ -119,11 +119,11 @@ def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get t
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   _default_keys = {
-    "XONTRIB_SKIM_KEY_HISTORY"	:"c-r",
-    "XONTRIB_SKIM_KEY_SSH"    	:"c-s",
-    "XONTRIB_SKIM_KEY_FILE"   	:"c-g",
-    "XONTRIB_SKIM_KEY_DIR"    	:"c-b",
+    "XONTRIB_SKIM_KEY_HISTORY"    	:"c-r",
     "XONTRIB_SKIM_KEY_HISTORY_CWD"	:"c-t",
+    "XONTRIB_SKIM_KEY_SSH"        	:"c-s",
+    "XONTRIB_SKIM_KEY_FILE"       	:"c-g",
+    "XONTRIB_SKIM_KEY_DIR"        	:"c-b",
     }
 
   def handler(key_user_var):
