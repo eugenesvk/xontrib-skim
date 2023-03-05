@@ -39,14 +39,16 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
   else:
     return bin
 
-def skim_get_args(): # get a list of skim arguments, combining defaults with user config
-  _def_opt  	= envx.get('SKIM_DEFAULT_OPTIONS'         	, None)
-  _height   	= envx.get('SKIM_TMUX_HEIGHT'             	, '40%')
-  _key_sort 	= envx.get('XONTRIB_SKIM_KEY_HISTORY_SORT'	, 'ctrl-r')
-  _no_height	= envx.get('XONTRIB_SKIM_NO_HEIGHT'       	, True)
+def skim_get_args(event, data_type): # get a list of skim arguments, combining defaults with user config
+  buf = event.current_buffer
+
+  _def_opt  	= envx.get('SKIM_DEFAULT_OPTIONS'        	, None)
+  _height   	= envx.get('SKIM_TMUX_HEIGHT'            	, '40%')
+  _key_sort 	= envx.get('XONTRIB_SKIM_KEY_SORT_TOGGLE'	, 'ctrl-r')
+  _no_height	= envx.get('XONTRIB_SKIM_NO_HEIGHT'      	, True)
+  _no_sort  	= envx.get('XONTRIB_SKIM_NO_SORT'        	, True)
 
   skim_args = [
-    "--read0"         	, # Read input delimited by NUL instead of ␤
     "--layout=reverse"	, # display from the |default|=bottom ¦reverse¦=top ¦reverse-list¦ top+prompt@bottom
     "--tiebreak=index"	, # Comma-separated list of sort criteria to apply when the scores are tied
       # score         	    Score of the fuzzy match algorithm
@@ -56,10 +58,24 @@ def skim_get_args(): # get a list of skim arguments, combining defaults with use
       # length        	    Prefers line with shorter length
       # -XXX          	    negates XXX
     "--tac"           	, # reverse the order of the search result (normally used together with --no-sort)
-    "--no-sort"       	, # don't sort the search result (normally used together with --tac)
-    "--no-multi"      	, # disable multi-select
     f"--bind={_key_sort}:toggle-sort",
   ]
+
+  if   data_type == 'history':
+    skim_args += [
+      "--read0"   	, # Read input delimited by NUL instead of ␤
+      "--no-multi"	, # disable multi-select
+    ]
+    if     _no_sort:
+      skim_args += [
+        "--no-sort"	, # don't sort the search result (normally used together with --tac)
+      ]
+    if len(user_input := buf.text) > 0:
+      skim_args += [f"--query=^{user_input}"] # add existing user input as initial query
+  elif data_type == 'file':
+    skim_args += [
+      "--multi"	, # enable multi-select
+    ]
 
   if not _no_height: # todo: move ↑ after https://github.com/lotabout/skim/issues/494 is fixed
     skim_args += [
@@ -74,19 +90,23 @@ def skim_get_args(): # get a list of skim arguments, combining defaults with use
 
   return skim_args
 
-def skim_proc_open(event): # Create a skim process with default arguments and return it
+def skim_proc_run(event,data_type,env=envx): # Run a skim process with default args and return it
   if not (bin := get_bin(base)):
     return
-  args = skim_get_args()
-
-  buf = event.current_buffer
-  if len(user_input := buf.text) > 0:
-    args += [f"--query=^{user_input}"] # add existing user input as initial query
-
+  args = skim_get_args(event,data_type)
   skim_cmd = [bin] + args
-  skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
+  if   data_type == 'file':
+    skim_proc = subprocess.run(  skim_cmd,            stdout=PIPE, text=True, env=env)
+    return skim_proc
 
-  return skim_proc
+def skim_proc_open(event,data_type): # Create a skim process with default args and return it
+  if not (bin := get_bin(base)):
+    return
+  args = skim_get_args(event,data_type)
+  skim_cmd = [bin] + args
+  if   data_type == 'history':
+    skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
+    return skim_proc
 
 def skim_proc_close(skim_proc, event): # Close the given skim process and reset shell
   skim_proc.stdin.close()
@@ -100,14 +120,14 @@ def skim_proc_close(skim_proc, event): # Close the given skim process and reset 
     buf.cursor_position	= len(skim_out)
 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
-  skim_proc = skim_proc_open(event)
+  skim_proc = skim_proc_open(event, 'history')
   historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
   skim_proc_close(skim_proc, event)
 
 def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get the chosen item printed to stdout
   if (histx := XSH.history) is None:
     return
-  skim_proc = skim_proc_open(event)
+  skim_proc = skim_proc_open(event, 'history')
   cwds_processed = set()
   for entry in histx.all_items():
     if (cwd := entry.get("cwd")) and\
