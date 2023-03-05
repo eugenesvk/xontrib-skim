@@ -104,6 +104,18 @@ def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get t
   historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
   skim_proc_close(skim_proc, event)
 
+def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get the chosen item printed to stdout
+  if (histx := XSH.history) is None:
+    return
+  skim_proc = skim_proc_open(event)
+  cwds_processed = set()
+  for entry in histx.all_items():
+    if (cwd := entry.get("cwd")) and\
+       (cwd not in cwds_processed):
+      cwds_processed.add(cwd)
+      skim_proc.stdin.write(f"{cwd}\0")
+  skim_proc_close(skim_proc, event)
+
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   _default_keys = {
@@ -111,6 +123,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
     "XONTRIB_SKIM_KEY_SSH"    	:"c-s",
     "XONTRIB_SKIM_KEY_FILE"   	:"c-g",
     "XONTRIB_SKIM_KEY_DIR"    	:"c-b",
+    "XONTRIB_SKIM_KEY_HISTORY_CWD"	:"c-t",
     }
 
   def handler(key_user_var):
@@ -133,6 +146,9 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   @handler("XONTRIB_SKIM_KEY_HISTORY")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
     skim_get_history_cmd(event)
+  @handler("XONTRIB_SKIM_KEY_HISTORY_CWD")
+  def skim_history_cwd(event): # Search in dir history entries and insert the chosen command
+    skim_get_history_cwd(event)
 
 
 

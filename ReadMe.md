@@ -38,6 +38,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["XONTRIB_SKIM_KEY_FILE"]   	= "c-g" # |c-g|False¦ ⌃G Find files in the current directory and its sub-directories
   envx["XONTRIB_SKIM_KEY_DIR"]    	= "c-b" # |c-b|False¦ ⌃B Find dirs  in the current directory and its sub-directories
   envx["XONTRIB_SKIM_KEY_SSH"]    	= "c-s" # |c-s|False¦ ⌃S Search in /etc/ssh/ssh_config or ~/.ssh/config items and issue ssh command on the chosen item
+  envx["XONTRIB_SKIM_KEY_HISTORY_CWD"]	= "c-t" # |c-t|False¦ ⌃T Search in history entries' CWD and insert the chosen command
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # ↓ are key bindings for the skim binary itself, not this xontrib, so use skim rules https://github.com/lotabout/skim#keymap
   envx["XONTRIB_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r" # |ctrl-r| ⌃R binding for 'toggle-sort'
