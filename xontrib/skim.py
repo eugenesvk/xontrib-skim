@@ -243,7 +243,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
     skim_get_history_cmd(event)
   @handler("X_SKIM_KEY_HISTORY_CWD")
-  def skim_history_cwd(event): # Search in dir history entries and insert the chosen command
+  def skim_history_cwd(event): # Search in history entries' CWD
     skim_get_history_cwd(event)
 
   @handler("X_SKIM_KEY_FILE")
