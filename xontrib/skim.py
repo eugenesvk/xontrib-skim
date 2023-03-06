@@ -121,7 +121,7 @@ def skim_proc_open(event,data_type): # Create a skim process with default args a
     skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
     return skim_proc
 
-def skim_proc_close(skim_proc, event): # Close the given skim process and reset shell
+def skim_proc_close(event, skim_proc, prefix=""): # Close the given skim process and reset shell
   skim_proc.stdin.close()
   skim_proc.wait()
 
@@ -135,7 +135,7 @@ def skim_proc_close(skim_proc, event): # Close the given skim process and reset 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
   skim_proc = skim_proc_open(event, 'history')
   historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
-  skim_proc_close(skim_proc, event)
+  skim_proc_close(event, skim_proc)
 
 def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get the chosen item printed to stdout
   if (histx := XSH.history) is None:
@@ -147,7 +147,7 @@ def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get t
        (cwd not in cwds_processed):
       cwds_processed.add(cwd)
       skim_proc.stdin.write(f"{cwd}\0")
-  skim_proc_close(skim_proc, event)
+  skim_proc_close(event, skim_proc)
 
 def get_dir_complete(line):
   ctx_parse	= CompletionContextParser().parse
