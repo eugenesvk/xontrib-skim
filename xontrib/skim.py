@@ -60,7 +60,6 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
       # end           	    Prefers line with matched substring closer to the end
       # length        	    Prefers line with shorter length
       # -XXX          	    negates XXX
-    "--tac"           	, # reverse the order of the search result (normally used together with --no-sort)
   ]
 
   if   _key_sort:
@@ -78,6 +77,7 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
     skim_args += [
       "--read0"   	, # Read input delimited by NUL instead of ␤
       "--no-multi"	, # disable multi-select
+      "--tac"     	, # reverse the order of the search result (normally used together with --no-sort)
     ]
     if     _no_sort:
       skim_args += [
