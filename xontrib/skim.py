@@ -230,6 +230,10 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
     key_user = envx.get(     key_user_var, None)
     key_def  = _default_keys[key_user_var]
+    _controls = ['⎈','⌃']
+    for ctrl in _controls:
+      if ctrl in key_user: # replace ctrl symbols with ptk names
+        key_user = key_user.replace(ctrl,'c-')
     _alts = ['a-','⌥','⎇']
     for alt in _alts:
       if alt in key_user: # replace alt with an ⎋ sequence of keys

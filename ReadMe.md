@@ -41,6 +41,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_KEY_SSH"]        	= "c-b"	#|c-b|False¦ ⌃B Search in /etc/ssh/ssh_config or ~/.ssh/config items and issue ssh command on the chosen item
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # Alt is also supported as either of: a- ⎇ ⌥ (converted to a prefix 'escape')
+  # Control symbols are also supported as either of: ⎈ ⌃
   # ↓ are key bindings for the skim binary itself, not this xontrib, so use skim rules https://github.com/lotabout/skim#keymap
   envx["X_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r"	#|ctrl-r|False¦ ⌃R binding for 'toggle-sort'
   envx["X_SKIM_KEY_CUSTOM"]     	= None    	#|None| a dictionary of {'key':'action'}
