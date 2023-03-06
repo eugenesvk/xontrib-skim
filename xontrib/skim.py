@@ -235,7 +235,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
     elif key_user in ALL_KEYS: # exists and   valid  → use it
       return bindings.add(key_user)
     else:                      # exists and invalid  → use default
-      print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+key+"{RESET}' is {RED}invalid{RESET}; "+\
+      print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+key_user+"{RESET}' is {RED}invalid{RESET}; "+\
         "using the default '{BLUE}"+key_def+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
       return bindings.add(key_def)
 
