@@ -42,6 +42,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # ↓ are key bindings for the skim binary itself, not this xontrib, so use skim rules https://github.com/lotabout/skim#keymap
   envx["XONTRIB_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r" # |ctrl-r| ⌃R binding for 'toggle-sort'
+  envx["XONTRIB_SKIM_KEY_CUSTOM"]     	= None # |None| a dictionary of {'key':'action'}
   envx["XONTRIB_SKIM_NO_HEIGHT"]      	= True # |True|False¦ disable `--height` to fix a skim bug
   envx["XONTRIB_SKIM_NO_SORT"]        	= True # |True|False¦ disable history sorting
   # envx["XONTRIB_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" # |None| command used by skim to search for files

@@ -49,6 +49,7 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
   _key_sort 	= envx.get('XONTRIB_SKIM_KEY_SORT_TOGGLE'	, 'ctrl-r')
   _no_height	= envx.get('XONTRIB_SKIM_NO_HEIGHT'      	, True)
   _no_sort  	= envx.get('XONTRIB_SKIM_NO_SORT'        	, True)
+  _key_custom	= envx.get('XONTRIB_SKIM_KEY_CUSTOM'     	, None)
 
   skim_args = [
     "--layout=reverse"	, # display from the |default|=bottom ¦reverse¦=top ¦reverse-list¦ top+prompt@bottom
@@ -60,8 +61,18 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
       # length        	    Prefers line with shorter length
       # -XXX          	    negates XXX
     "--tac"           	, # reverse the order of the search result (normally used together with --no-sort)
-    f"--bind={_key_sort}:toggle-sort",
   ]
+
+  if   _key_sort:
+    skim_args += [
+      f"--bind={_key_sort}:toggle-sort",
+    ]
+
+  if   _key_custom and type(_key_custom) == dict:
+    _key_opt = ",".join([f"{k}:{v}" for k,v in _key_custom.items()])
+    skim_args += [
+      f"--bind={_key_opt}",
+    ]
 
   if   data_type == 'history':
     skim_args += [
