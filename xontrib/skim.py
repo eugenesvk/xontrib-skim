@@ -214,6 +214,8 @@ def skim_get_file(event, dirs_only=False):
 
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
+  from prompt_toolkit.key_binding.key_bindings import _parse_key
+
   _default_keys = {
     "X_SKIM_KEY_HISTORY"    	:"c-s",
     "X_SKIM_KEY_HISTORY_CWD"	:"c-t",
@@ -228,14 +230,23 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
     key_user = envx.get(     key_user_var, None)
     key_def  = _default_keys[key_user_var]
+    _alts = ['a-','⌥','⎇']
+    for alt in _alts:
+      if alt in key_user: # replace alt with an ⎋ sequence of keys
+        key_user = ['escape', key_user.replace(alt,'')]
+        break
     if   key_user == None:     # doesn't exist       → use default
       return bindings.add(key_def)
     elif key_user == False:    # exists and disabled → don't bind
       return skip
-    elif key_user in ALL_KEYS: # exists and   valid  → use it
+    elif type(key_user) == str  and\
+         key_user in ALL_KEYS: # exists and   valid  → use it
       return bindings.add(key_user)
+    elif type(key_user) == list and\
+      all(k in ALL_KEYS or _parse_key(k) for k in key_user):
+      return bindings.add(*key_user)
     else:                      # exists and invalid  → use default
-      print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+key_user+"{RESET}' is {RED}invalid{RESET}; "+\
+      print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+str(key_user)+"{RESET}' is {RED}invalid{RESET}; "+\
         "using the default '{BLUE}"+key_def+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
       return bindings.add(key_def)
 
