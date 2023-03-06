@@ -2,10 +2,12 @@
 skim (fuzzy finder) integration
 """
 import subprocess
-from os                 	import environ  #
-from pathlib            	import Path     #
-from xonsh.built_ins    	import XSH
-from prompt_toolkit.keys	import ALL_KEYS
+from os                              	import environ, chdir  #
+from pathlib                         	import Path     #
+from xonsh.built_ins                 	import XSH
+from prompt_toolkit.keys             	import ALL_KEYS
+from xonsh.completers.path           	import complete_dir, _quote_paths
+from xonsh.parsers.completion_context	import CompletionContextParser
 
 __all__ = ()
 
@@ -136,6 +138,69 @@ def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get t
       skim_proc.stdin.write(f"{cwd}\0")
   skim_proc_close(skim_proc, event)
 
+def get_dir_complete(line):
+  ctx_parse	= CompletionContextParser().parse
+  if (cmd := ctx_parse(line, len(line)).command).prefix:
+    paths = complete_dir(cmd)[0]
+
+    path = None
+    if   len(paths) == 1: # if completes to a dir, use it
+      path = Path(paths.pop().value).expanduser()
+    elif len(paths)  > 1: # if already a dir and completes to subdirs, use main dir
+      path = Path(paths.pop().value).parent.expanduser()
+
+    if path and \
+       path.is_dir():
+        return path, cmd.prefix
+
+  return "", ""
+
+def skim_get_dir(event):
+	skim_get_file(event, dirs_only=True)
+def skim_get_file(event, dirs_only=False):
+  buf          	= event.current_buffer
+
+  # 1. if our string completes to a Dir, cd there to trick the finder to start search there
+  # (a less sneaky alternative is to pass Dir as an explicit argument like '--full-path PATH', but that's tool-dependant)
+  before_cursor	= buf.document.current_line_before_cursor
+  cwd          	= None
+  dir_complete, prefix = get_dir_complete(before_cursor)
+  if (dir_complete):
+    cwd = Path.cwd()
+    chdir(dir_complete)
+
+  # 2. run skim with our custom find file/dir commands
+  env_override = {}
+  if dirs_only:
+    if "XONTRIB_SKIM_CMD_FIND_DIR" in envx:
+      env_override['SKIM_DEFAULT_COMMAND'] = envx["XONTRIB_SKIM_CMD_FIND_DIR"]
+  else:
+    if "XONTRIB_SKIM_CMD_FIND"      in envx:
+      env_override['SKIM_DEFAULT_COMMAND'] = envx["XONTRIB_SKIM_CMD_FIND"]
+  with envx.swap(**env_override):
+    skim_proc_res = skim_proc_run(event, 'file', env=envx.detype())
+  choice = skim_proc_res.stdout.strip()
+
+  # 3. cleanup
+  if cwd: # switch back to our starting Dir
+    chdir(cwd)
+  event.cli.renderer.erase() # clear old output
+
+  # 3. insert selected path(s), xonsh-quoted (todo: replace _internal _quote_paths)
+  if choice:
+    if dir_complete:
+      buf.delete_before_cursor(len(prefix))
+
+    cmd = ""
+    for c in choice.splitlines():
+      q_beg, q_end = "'", "'" # 'quote', ↓ with only ' in path switch "quote"
+      if ("'"     in c.strip()) and \
+         ('"' not in c.strip()):
+        q_beg, q_end = '"', '"'
+      cmd += _quote_paths([str(Path(dir_complete,c.strip()))], start=q_beg,end=q_end)[0].pop() + ' ' # ({'p'}, True) → [0].pop() → 'p'
+
+    buf.insert_text(cmd.strip())
+
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   _default_keys = {
@@ -169,6 +234,13 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   @handler("XONTRIB_SKIM_KEY_HISTORY_CWD")
   def skim_history_cwd(event): # Search in dir history entries and insert the chosen command
     skim_get_history_cwd(event)
+
+  @handler("XONTRIB_SKIM_KEY_FILE")
+  def skim_file(event): # Find files in the current directory and its sub-directories
+    skim_get_file(event)
+  @handler("XONTRIB_SKIM_KEY_DIR")
+  def skim_dir(event):  # Find dirs  in the current directory and its sub-directories
+    skim_get_dir(event)
 
 
 
