@@ -44,12 +44,12 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
 def skim_get_args(event, data_type): # get a list of skim arguments, combining defaults with user config
   buf = event.current_buffer
 
-  _def_opt  	= envx.get('SKIM_DEFAULT_OPTIONS'        	, None)
-  _height   	= envx.get('SKIM_TMUX_HEIGHT'            	, '40%')
-  _key_sort 	= envx.get('XONTRIB_SKIM_KEY_SORT_TOGGLE'	, 'ctrl-r')
-  _no_height	= envx.get('XONTRIB_SKIM_NO_HEIGHT'      	, True)
-  _no_sort  	= envx.get('XONTRIB_SKIM_NO_SORT'        	, True)
-  _key_custom	= envx.get('XONTRIB_SKIM_KEY_CUSTOM'     	, None)
+  _def_opt   	= envx.get('SKIM_DEFAULT_OPTIONS'  	, None)
+  _height    	= envx.get('SKIM_TMUX_HEIGHT'      	, '40%')
+  _key_sort  	= envx.get('X_SKIM_KEY_SORT_TOGGLE'	, 'ctrl-r')
+  _key_custom	= envx.get('X_SKIM_KEY_CUSTOM'     	, None)
+  _no_height 	= envx.get('X_SKIM_NO_HEIGHT'      	, True)
+  _no_sort   	= envx.get('X_SKIM_NO_SORT'        	, True)
 
   skim_args = [
     "--layout=reverse"	, # display from the |default|=bottom ¦reverse¦=top ¦reverse-list¦ top+prompt@bottom
@@ -183,11 +183,11 @@ def skim_get_file(event, dirs_only=False):
   # 2. run skim with our custom find file/dir commands
   env_override = {}
   if dirs_only:
-    if "XONTRIB_SKIM_CMD_FIND_DIR" in envx:
-      env_override['SKIM_DEFAULT_COMMAND'] = envx["XONTRIB_SKIM_CMD_FIND_DIR"]
+    if "X_SKIM_CMD_FIND_DIR" in envx:
+      env_override['SKIM_DEFAULT_COMMAND'] = envx["X_SKIM_CMD_FIND_DIR"]
   else:
-    if "XONTRIB_SKIM_CMD_FIND"      in envx:
-      env_override['SKIM_DEFAULT_COMMAND'] = envx["XONTRIB_SKIM_CMD_FIND"]
+    if "X_SKIM_CMD_FIND"      in envx:
+      env_override['SKIM_DEFAULT_COMMAND'] = envx["X_SKIM_CMD_FIND"]
   with envx.swap(**env_override):
     skim_proc_res = skim_proc_run(event, 'file', env=envx.detype())
   choice = skim_proc_res.stdout.strip()
@@ -215,11 +215,11 @@ def skim_get_file(event, dirs_only=False):
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   _default_keys = {
-    "XONTRIB_SKIM_KEY_HISTORY"    	:"c-r",
-    "XONTRIB_SKIM_KEY_HISTORY_CWD"	:"c-t",
-    "XONTRIB_SKIM_KEY_SSH"        	:"c-s",
-    "XONTRIB_SKIM_KEY_FILE"       	:"c-g",
-    "XONTRIB_SKIM_KEY_DIR"        	:"c-b",
+    "X_SKIM_KEY_HISTORY"    	:"c-s",
+    "X_SKIM_KEY_HISTORY_CWD"	:"c-t",
+    "X_SKIM_KEY_FILE"       	:"c-f",
+    "X_SKIM_KEY_DIR"        	:"c-g",
+    "X_SKIM_KEY_SSH"        	:"c-b",
     }
 
   def handler(key_user_var):
@@ -239,17 +239,17 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
         "using the default '{BLUE}"+key_def+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
       return bindings.add(key_def)
 
-  @handler("XONTRIB_SKIM_KEY_HISTORY")
+  @handler("X_SKIM_KEY_HISTORY")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
     skim_get_history_cmd(event)
-  @handler("XONTRIB_SKIM_KEY_HISTORY_CWD")
+  @handler("X_SKIM_KEY_HISTORY_CWD")
   def skim_history_cwd(event): # Search in dir history entries and insert the chosen command
     skim_get_history_cwd(event)
 
-  @handler("XONTRIB_SKIM_KEY_FILE")
+  @handler("X_SKIM_KEY_FILE")
   def skim_file(event): # Find files in the current directory and its sub-directories
     skim_get_file(event)
-  @handler("XONTRIB_SKIM_KEY_DIR")
+  @handler("X_SKIM_KEY_DIR")
   def skim_dir(event):  # Find dirs  in the current directory and its sub-directories
     skim_get_dir(event)
 
