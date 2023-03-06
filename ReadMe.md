@@ -34,16 +34,16 @@ xontribs = [ "skim", # Initializes skim (polyglot asdf-like runtime manager)
 # ↓ optional configuration variables (use `False` to disable a keybind)
 if 'skim' in xontribs: # Configure skim only if you're actually loading it
   # config var                  	  value	 |default|alt_cmd¦ comment
-  envx["X_SKIM_KEY_HISTORY"]    	= "c-s"	#|c-s|False¦ ⌃S Search in history entries and insert the chosen command
-  envx["X_SKIM_KEY_HISTORY_CWD"]	= "c-t"	#|c-t|False¦ ⌃T Search in history entries' CWD and insert the chosen command
-  envx["X_SKIM_KEY_FILE"]       	= "c-f"	#|c-f|False¦ ⌃F Find files in the current directory and its sub-directories
-  envx["X_SKIM_KEY_DIR"]        	= "c-g"	#|c-g|False¦ ⌃G Find dirs  in the current directory and its sub-directories
-  envx["X_SKIM_KEY_SSH"]        	= "c-b"	#|c-b|False¦ ⌃B Search in /etc/ssh/ssh_config or ~/.ssh/config items and issue ssh command on the chosen item
+  envx["X_SKIM_KEY_HISTORY"]    	= "⎈s" 	#|c-s|False¦ ⎈s Search in history entries and insert the chosen command
+  envx["X_SKIM_KEY_HISTORY_CWD"]	= "⎇s" 	#|['escape','s']|False¦ ⎇s Search in history entries' CWD and insert the chosen command
+  envx["X_SKIM_KEY_FILE"]       	= "⎈f" 	#|c-f|False¦ ⎈f Find files in the current directory and its sub-directories
+  envx["X_SKIM_KEY_DIR"]        	= "⎇f" 	#|['escape','f']|False¦ ⎇f Find dirs  in the current directory and its sub-directories
+  envx["X_SKIM_KEY_SSH"]        	= "⎈b" 	#|c-b|False¦ ⎈B Search in /etc/ssh/ssh_config or ~/.ssh/config items and issue ssh command on the chosen item
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # Alt is also supported as either of: a- ⎇ ⌥ (converted to a prefix 'escape')
   # Control symbols are also supported as either of: ⎈ ⌃
   # ↓ are key bindings for the skim binary itself, not this xontrib, so use skim rules https://github.com/lotabout/skim#keymap
-  envx["X_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r"	#|ctrl-r|False¦ ⌃R binding for 'toggle-sort'
+  envx["X_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r"	#|ctrl-r|False¦ ⎈R binding for 'toggle-sort'
   envx["X_SKIM_KEY_CUSTOM"]     	= None    	#|None| a dictionary of {'key':'action'}
   envx["X_SKIM_NO_HEIGHT"]      	= True    	#|True|False¦ disable `--height` to fix a skim bug
   envx["X_SKIM_NO_SORT"]        	= True    	#|True|False¦ disable history sorting
@@ -58,7 +58,7 @@ xontribs_load(xontribs_manual) # actually load all xontribs in the list
 ```xsh
 xontrib load skim # Initializes skim (fuzzy finder)
 # configure like in the example above, but replace envx['VAR'] with $VAR
-$X_SKIM_KEY_HISTORY	= "c-r" # ...
+$X_SKIM_KEY_HISTORY	= "c-s" # ...
 ```
 
 ## Examples

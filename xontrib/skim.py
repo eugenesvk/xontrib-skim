@@ -218,9 +218,9 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
   _default_keys = {
     "X_SKIM_KEY_HISTORY"    	:"c-s",
-    "X_SKIM_KEY_HISTORY_CWD"	:"c-t",
+    "X_SKIM_KEY_HISTORY_CWD"	:['escape','s'],
     "X_SKIM_KEY_FILE"       	:"c-f",
-    "X_SKIM_KEY_DIR"        	:"c-g",
+    "X_SKIM_KEY_DIR"        	:['escape','f'],
     "X_SKIM_KEY_SSH"        	:"c-b",
     }
 
@@ -240,7 +240,10 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
         key_user = ['escape', key_user.replace(alt,'')]
         break
     if   key_user == None:     # doesn't exist       → use default
-      return bindings.add(key_def)
+      if type(key_def) == list:
+        return bindings.add(*key_def)
+      else:
+        return bindings.add( key_def)
     elif key_user == False:    # exists and disabled → don't bind
       return skip
     elif type(key_user) == str  and\
@@ -251,8 +254,11 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
       return bindings.add(*key_user)
     else:                      # exists and invalid  → use default
       print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+str(key_user)+"{RESET}' is {RED}invalid{RESET}; "+\
-        "using the default '{BLUE}"+key_def+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
-      return bindings.add(key_def)
+        "using the default '{BLUE}"+str(key_def)+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
+      if type(key_def) == list:
+        return bindings.add(*key_def)
+      else:
+        return bindings.add( key_def)
 
   @handler("X_SKIM_KEY_HISTORY")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
