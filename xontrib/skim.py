@@ -3,6 +3,7 @@ skim (fuzzy finder) integration
 """
 import subprocess
 import re
+import typing
 from os                              	import environ, chdir  #
 from pathlib                         	import Path     #
 from xonsh.built_ins                 	import XSH
@@ -16,6 +17,7 @@ envx    	= XSH.env or {}
 env     	= environ
 historyx	= XSH.aliases["history"]
 eventx  	= XSH.builtins.events
+cdx     	= XSH.aliases["cd"]
 PIPE    	= subprocess.PIPE
 
 base={'':'sk', 'tmux':'sk-tmux'}
@@ -170,6 +172,51 @@ def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get t
       skim_proc.stdin.write(f"{cwd}\0")
   skim_proc_close(event, skim_proc)
 
+from xonsh.style_tools import partial_color_tokenize
+from prompt_toolkit.formatted_text import PygmentsTokens
+from xonsh.ptk_shell.shell import tokenize_ansi
+def _p_msg_fmt(s):
+  return tokenize_ansi(PygmentsTokens(partial_color_tokenize(XSH.shell.shell.prompt_formatter(s))))
+
+import threading
+def _update_prompt(): # force-update all 3 prompts (if exist) to the newer values. Helpful when xontrib changes some prompt variables in the background and doesn't want to wait for the next prompt cycle
+  shellx = XSH.shell.shell
+  shellx.prompt_formatter.fields.reset() # reset fields cache
+  if prompt_l := envx['PROMPT']:
+    prompt_l = prompt_l() if callable(prompt_l) else prompt_l
+    shellx.prompter.message        = _p_msg_fmt(prompt_l)
+  if prompt_r := envx['RIGHT_PROMPT']:
+    prompt_r = prompt_r() if callable(prompt_r) else prompt_r
+    shellx.prompter.rprompt        = _p_msg_fmt(prompt_r)
+  if prompt_b := envx['BOTTOM_TOOLBAR']:
+    prompt_b = prompt_b() if callable(prompt_b) else prompt_b
+    shellx.prompter.bottom_toolbar = _p_msg_fmt(prompt_b)
+  shellx.prompter.app.invalidate()      # send signal that prompt needs update
+
+def _on_close_cd_inline(event, path: typing.Optional[typing.AnyStr] = None) -> None:
+  """Change dir without creating a new prompt line, updating existing instead"""
+  buf = event.current_buffer
+  doc = buf.document
+  cli = event.cli
+
+  if path is None:
+    args = []
+  elif isinstance(path, bytes):
+    args = [path.decode("utf-8")]
+  elif isinstance(path, str):
+    args = [path]
+  if         path and \
+    not Path(path).is_dir():
+    return # do nothing is target is not a Dir
+  _, exc, _ = cdx(args)
+  if exc is not None:
+    raise Exception(exc)
+  else:
+    _text = doc.current_line_before_cursor
+    buf.delete_before_cursor(len(_text))
+    t = threading.Thread(target=_update_prompt, args=())
+    t.start()
+    buf.insert_text(_text.strip())
 def get_dir_complete(line):
   ctx_parse	= CompletionContextParser().parse
   if (cmd := ctx_parse(line, len(line)).command).prefix:
