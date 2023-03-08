@@ -165,7 +165,7 @@ def skim_proc_close(event, skim_proc, prefix="", re_deprefix=None, replace=True,
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
   skim_proc = skim_proc_open(event, 'history')
   historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
-  skim_proc_close(event, skim_proc)
+  skim_proc_close(event, skim_proc, replace=True)
 
 def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get the chosen item printed to stdout
   if (histx := XSH.history) is None:
