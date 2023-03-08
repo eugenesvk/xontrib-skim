@@ -35,6 +35,7 @@ xontribs = [ "skim", # Initializes skim (polyglot asdf-like runtime manager)
 if 'skim' in xontribs: # Configure skim only if you're actually loading it
   # config var                	  value		 |default|alt_cmd¦ comment
   envx["X_SKIM_KEY_HIST"]     	= "⎈s" 		#|c-s|             False¦ Search in history entries and insert the chosen command
+  envx["X_SKIM_KEY_HIST_CWD→"]	= "⎇s" 		#|['escape','s']|  False¦ Search in history entries' CWD and CD to the selected item (if exists, do nothing otherwise)
   envx["X_SKIM_KEY_HIST_CWD"] 	= "⎈⎇s"	#|['escape','c-s']|False¦ Search in history entries' CWD and insert the selected item(s)
   envx["X_SKIM_KEY_FILE"]     	= "⎈f" 		#|c-f|             False¦ Find files in the current directory and its sub-directories
   envx["X_SKIM_KEY_DIR"]      	= "⎇f" 		#|['escape','f']|  False¦ Find dirs  in the current directory and its sub-directories

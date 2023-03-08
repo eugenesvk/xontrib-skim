@@ -167,17 +167,21 @@ def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get t
   historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
   skim_proc_close(event, skim_proc, replace=True)
 
-def skim_get_history_cwd(event): # Run skim, pipe xonsh CWD history to it, get the chosen item printed to stdout
+def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to it, get the chosen item(s) printed to stdout OR cd to a single chosen item
   if (histx := XSH.history) is None:
     return
-  skim_proc = skim_proc_open(event, 'history')
+  data_type = ['history'] if cd else ['history', 'file']
+  skim_proc = skim_proc_open(event, data_type)
   cwds_processed = set()
   for entry in histx.all_items():
     if (cwd := entry.get("cwd")) and\
        (cwd not in cwds_processed):
       cwds_processed.add(cwd)
       skim_proc.stdin.write(f"{cwd}\0")
-  skim_proc_close(event, skim_proc)
+  if cd:
+    skim_proc_close(event, skim_proc, func=_on_close_cd_inline, replace=False)
+  else:
+    skim_proc_close(event, skim_proc, func=_on_close_paths_multiline, replace=False)
 
 from xonsh.style_tools import partial_color_tokenize
 from prompt_toolkit.formatted_text import PygmentsTokens
@@ -322,6 +326,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
   _default_keys = {
     "X_SKIM_KEY_HIST"     	: "c-s",
+    "X_SKIM_KEY_HIST_CWD→"	: ['escape','s'],
     "X_SKIM_KEY_HIST_CWD" 	: ['escape','c-s'],
     "X_SKIM_KEY_FILE"     	: "c-f",
     "X_SKIM_KEY_DIR"      	: ['escape','f'],
@@ -371,6 +376,9 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   @handler("X_SKIM_KEY_HIST")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
     skim_get_history_cmd(event)
+  @handler("X_SKIM_KEY_HIST_CWD→")
+  def skim_history_cwd(event): # Search in history entries' CWD and CD to the selected item
+    skim_get_history_cwd(event, cd=True)
   @handler("X_SKIM_KEY_HIST_CWD")
   def skim_history_cwd(event): # Search in history entries' CWD and insert the selected item(s)
     skim_get_history_cwd(event, cd=False)
