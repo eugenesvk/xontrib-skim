@@ -141,7 +141,7 @@ def skim_proc_open(event,data_type): # Create a skim process with default args a
   skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
   return skim_proc
 
-def skim_proc_close(event, skim_proc, prefix=""): # Close the given skim process and reset shell
+def skim_proc_close(event, skim_proc, prefix="", re_deprefix=None, replace=True, func=None): # Close the given skim process and reset shell
   skim_proc.stdin.close()
   skim_proc.wait()
 
@@ -149,8 +149,18 @@ def skim_proc_close(event, skim_proc, prefix=""): # Close the given skim process
 
   buf = event.current_buffer
   if (skim_out := skim_proc.stdout.read().strip()):
-    buf.text           	=     prefix + skim_out
-    buf.cursor_position	= len(prefix + skim_out)
+    if prefix:
+      skim_out = prefix +' '+ skim_out
+    if re_deprefix:
+      skim_out = re_deprefix.sub('',skim_out)
+
+    if func:
+      func(event, skim_out)
+    elif replace:
+      buf.text           	=     skim_out
+      buf.cursor_position	= len(skim_out)
+    else:
+      buf.insert_text(skim_out.strip())
 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
   skim_proc = skim_proc_open(event, 'history')
