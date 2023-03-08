@@ -70,7 +70,12 @@ $X_SKIM_KEY_HISTORY	= "c-s" # ...
 
 ## Known issues
 
-...
+- skim doesn't clear the screen properly when `--height` is set due to a [bug](https://github.com/lotabout/skim/issues/494). At the moment this flag is disabled via `X_SKIM_NO_HEIGHT`
+- skim sometimes prints extraneous text symbols, e.g., when searching history, maybe due to [this bug](https://github.com/lotabout/skim/issues/502) or something else
+- skim might bug in tmux on some system/terminals [bug1](https://github.com/lotabout/skim/issues/482), [bug2](https://github.com/lotabout/skim/issues/412) 
+- `toggle-sort` (and `X_SKIM_KEY_SORT_TOGGLE`) doesn't seem to be supported in skim, `ls | sk --bind=pgdn:toggle-sort` also fails
+- to remove extra `?[38;5;26mFOLDER` from output, add `--ansi` to `$SKIM_DEFAULT_OPTIONS` or disable colors in your `$X_SKIM_CMD_FIND`/`DIR` filter (e.g., `fd -t d -c never`)
+- <kbd>⎈</kbd>/<kbd>⎇</kbd><kbd>f</kbd> conflict with [xontrib-output-search](https://github.com/anki-code/xontrib-output-search)'s defaults
 
 ## Credits
 
