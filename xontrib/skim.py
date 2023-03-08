@@ -246,6 +246,7 @@ def skim_get_ssh(event, dirs_only=False):
   skim_proc_close(event, skim_proc, prefix='ssh', replace=True)
 
 
+re_despace = re.compile(r'\s', re.IGNORECASE)
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   from prompt_toolkit.key_binding.key_bindings import _parse_key
 
@@ -270,6 +271,8 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
         return bindings.add( key_def)
     elif key_user == False:    # exists and disabled → don't bind
       return skip
+    else:                      # remove whitespace
+      key_user = re_despace.sub('',key_user)
 
     _controls = ['⎈','⌃']
     for ctrl in _controls:
