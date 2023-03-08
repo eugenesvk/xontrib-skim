@@ -1,11 +1,7 @@
 <p align="center">
-skim (fuzzy finder) integration
+<a href="https://github.com/lotabout/skim">skim</a> (fuzzy finder) integration into <a href="https://xon.sh/">xonsh</a> (shell)
 <br>
-(description continued)
-</p>
-
-<p align="center">  
-description continued
+Sets up keybinds to search various type of data: dirs/files, history of commands/CWDs/dirs, ssh hosts...
 </p>
 
 
@@ -19,6 +15,16 @@ xpip install xontrib-skim
 ```
 
 ## Usage
+
+Supported data sources:
+
+  - xonsh history of commands (and their frequency)
+  - xonsh history of commands' CWDs (and the frequency of commands started here)
+  - zoxide's history of dirs
+  - (CWDs and dirs) support multi-selection (with proper escape-quoting) as well as `cd`-ing to the selected dir
+  - files in the current directory and its sub-directories
+  - dirs in the current directory and its sub-directories
+  - ssh hosts from `/etc/ssh/ssh_config`, `~/.ssh/config`, `~/.ssh/known_hosts`
 
 This xontrib requires `sk` (or `sk-tmux`) to be in `PATH`. If it's added to `PATH` via another xontrib (e.g, you installed it via Homebrew and use `xontrib-homebrew`), then you should load this xontrib after the one setting `PATH`
 
@@ -54,10 +60,10 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_CMD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
   envx["X_SKIM_CWD_FRQ"]        	= True    	#|True|False¦ add ∑command runs at a given CWD
   envx["X_SKIM_CWD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
-  # envx["X_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" # |None| command used by skim to search for files
-  # envx["X_SKIM_CMD_FIND_DIR"] 	= "fd -t d      -c never" # |None| command used by skim to search for directories
+  # envx["X_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" #|None| command used by skim to search for files
+  # envx["X_SKIM_CMD_FIND_DIR"] 	= "fd -t d      -c never" #|None| command used by skim to search for directories
   # envx["X_SKIM_DIR_VIEW"]     	= "ls -F --color=always {2..}" #|None| preview function for Dir lists
-  # envx["SKIM_DEFAULT_OPTIONS"]	= "" # |None| other options to pass to skim
+  # envx["SKIM_DEFAULT_OPTIONS"]	= "--ansi --preview-window=right:40%:wrap" # |None| other options to pass to skim
 
 xontribs_load(xontribs_manual) # actually load all xontribs in the list
 ```
