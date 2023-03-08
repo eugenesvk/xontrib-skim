@@ -56,6 +56,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_CWD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
   # envx["X_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" # |None| command used by skim to search for files
   # envx["X_SKIM_CMD_FIND_DIR"] 	= "fd -t d      -c never" # |None| command used by skim to search for directories
+  # envx["X_SKIM_DIR_VIEW"]     	= "ls -F --color=always {2..}" #|None| preview function for Dir lists
   # envx["SKIM_DEFAULT_OPTIONS"]	= "" # |None| other options to pass to skim
 
 xontribs_load(xontribs_manual) # actually load all xontribs in the list

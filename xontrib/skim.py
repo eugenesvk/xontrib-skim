@@ -111,6 +111,10 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
   if ('file' in data_type) or\
      ('dir'  in data_type):
     skim_args += ["--keep-right"] # (for long paths) keep the right end visible
+  if ('dir'  in data_type):
+    if (preview := envx.get("X_SKIM_DIR_VIEW",None)):
+      skim_args += [f"--preview={preview}"] #
+
   if 'freq' in data_type:
     skim_args += [
       "--delimiter=[^\t\n ][\t\n ]+"	, # field delimiter regex for --nth (default: AWK-style)
