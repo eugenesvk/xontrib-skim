@@ -44,6 +44,8 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
 
 def skim_get_args(event, data_type): # get a list of skim arguments, combining defaults with user config
   buf = event.current_buffer
+  if type(data_type) == str:
+    data_type = [data_type]
 
   _def_opt   	= envx.get('SKIM_DEFAULT_OPTIONS'  	, None)
   _height    	= envx.get('SKIM_TMUX_HEIGHT'      	, '40%')
@@ -74,23 +76,35 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
       f"--bind={_key_opt}",
     ]
 
-  if   data_type == 'history':
+  if   'history' in data_type:
     skim_args += [
       "--read0"   	, # Read input delimited by NUL instead of ␤
-      "--no-multi"	, # disable multi-select
       "--tac"     	, # reverse the order of the search result (normally used together with --no-sort)
     ]
+    if 'file' in data_type:
+      skim_args += [   "--multi"] # enable  multi-select of multiple files/dirs
+    else:
+      skim_args += ["--no-multi"] # disable multi-select
     if     _no_sort:
       skim_args += [
         "--no-sort"	, # don't sort the search result (normally used together with --tac)
       ]
     if len(user_input := buf.text) > 0:
       skim_args += [f"--query=^{user_input}"] # add existing user input as initial query
-  elif data_type == 'file':
+  elif 'file' in data_type:
     skim_args += [
       "--multi"	, # enable multi-select
     ]
-  elif data_type == 'ssh':
+  elif 'zoxide' in data_type: #
+    skim_args += [
+      "--delimiter=[^\t\n ][\t\n ]+"	, # field delimiter regex for --nth (default: AWK-style)
+      "-n2.."                       	, # limit search scope from field#2 to the last
+    ]
+    if 'file' in data_type:
+      skim_args += [   "--multi"] # enable  multi-select of multiple files/dirs
+    else:
+      skim_args += ["--no-multi"] # disable multi-select
+  elif 'ssh' in data_type:
     skim_args += [
       "--read0"   	, # Read input delimited by NUL instead of ␤
       "--no-multi"	, # disable multi-select
