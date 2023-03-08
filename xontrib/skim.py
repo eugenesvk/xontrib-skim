@@ -80,36 +80,32 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
 
   if   'history' in data_type:
     skim_args += [
-      "--read0"   	, # Read input delimited by NUL instead of ␤
-      "--tac"     	, # reverse the order of the search result (normally used together with --no-sort)
+      "--read0"	, # Read input delimited by NUL instead of ␤
+      "--tac"  	, # reverse the order of the search result (normally used together with --no-sort)
     ]
-    if 'file' in data_type:
-      skim_args += [   "--multi"] # enable  multi-select of multiple files/dirs
+    if 'cd'     in data_type:
+      skim_args += ["--no-multi"] # disable multi-select, only 1 Dir can be cd'ed to
     else:
-      skim_args += ["--no-multi"] # disable multi-select
+      skim_args += [   "--multi"]
     if     _no_sort:
       skim_args += [
         "--no-sort"	, # don't sort the search result (normally used together with --tac)
       ]
     if len(user_input := buf.text) > 0:
       skim_args += [f"--query=^{user_input}"] # add existing user input as initial query
-  elif 'file' in data_type:
-    skim_args += [
-      "--multi"	, # enable multi-select
-    ]
   elif 'zoxide' in data_type: #
     skim_args += [
       "--delimiter=[^\t\n ][\t\n ]+"	, # field delimiter regex for --nth (default: AWK-style)
       "-n2.."                       	, # limit search scope from field#2 to the last
     ]
-    if 'file' in data_type:
-      skim_args += [   "--multi"] # enable  multi-select of multiple files/dirs
+    if 'cd'     in data_type:
+      skim_args += ["--no-multi"] # disable multi-select, only 1 Dir can be cd'ed to
     else:
-      skim_args += ["--no-multi"] # disable multi-select
+      skim_args += [   "--multi"]
   elif 'ssh' in data_type:
     skim_args += [
       "--read0"   	, # Read input delimited by NUL instead of ␤
-      "--no-multi"	, # disable multi-select
+      "--no-multi"	, # disable multi-select, only 1 host can be ssh'ed to
     ]
 
   if 'freq' in data_type:
@@ -199,7 +195,9 @@ def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get t
 def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to it, get the chosen item(s) printed to stdout OR cd to a single chosen item
   if (histx := XSH.history) is None:
     return
-  data_type = ['history'] if cd else ['history', 'file']
+  data_type = ['history','dir']
+  if cd:
+    data_type += ['cd']
   if (freq := envx.get("X_SKIM_CWD_FRQ",True)):
     data_type += ['freq']
   skim_proc = skim_proc_open(event, data_type)
@@ -305,7 +303,9 @@ def skim_get_history_cwd_zoxide(event, cd=False): # Run skim, pipe zoxide dir hi
   args = ['query','-ls']
   zoxide_cmd = [bin_] + args
 
-  data_type = ['zoxide'] if cd else ['zoxide', 'file']
+  data_type = ['zoxide','dir']
+  if cd:
+    data_type += ['cd']
   skim_proc = skim_proc_open(event, data_type)
   subprocess.run(zoxide_cmd, stdout=skim_proc.stdin, text=True)
   if cd:
