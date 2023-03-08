@@ -214,6 +214,17 @@ def _on_close_cd_inline(event, path: typing.Optional[typing.AnyStr] = None) -> N
     t = threading.Thread(target=_update_prompt, args=())
     t.start()
     buf.insert_text(_text.strip())
+
+def _on_close_paths_multiline(event, paths, prefix=""):  # todo: replace _internal _quote_paths
+  buf	= event.current_buffer
+  cmd	= ""
+  for p in paths.splitlines():
+    q_beg, q_end = "'", "'" # 'quote', ↓ with only ' in path switch "quote"
+    if ("'"     in p.strip()) and \
+       ('"' not in p.strip()):
+      q_beg, q_end = '"', '"'
+    cmd += _quote_paths([str(Path(prefix,p.strip()))], start=q_beg,end=q_end)[0].pop() + ' ' # ({'p'}, True) → [0].pop() → 'p'
+  buf.insert_text(cmd.strip())
 def get_dir_complete(line):
   ctx_parse	= CompletionContextParser().parse
   if (cmd := ctx_parse(line, len(line)).command).prefix:
@@ -262,20 +273,11 @@ def skim_get_file(event, dirs_only=False):
     chdir(cwd)
   event.cli.renderer.erase() # clear old output
 
-  # 3. insert selected path(s), xonsh-quoted (todo: replace _internal _quote_paths)
+  # 3. insert selected path(s), xonsh-quoted
   if choice:
     if dir_complete:
       buf.delete_before_cursor(len(prefix))
-
-    cmd = ""
-    for c in choice.splitlines():
-      q_beg, q_end = "'", "'" # 'quote', ↓ with only ' in path switch "quote"
-      if ("'"     in c.strip()) and \
-         ('"' not in c.strip()):
-        q_beg, q_end = '"', '"'
-      cmd += _quote_paths([str(Path(dir_complete,c.strip()))], start=q_beg,end=q_end)[0].pop() + ' ' # ({'p'}, True) → [0].pop() → 'p'
-
-    buf.insert_text(cmd.strip())
+    _on_close_paths_multiline(event, choice, prefix=dir_complete)
 
 re_Host = re.compile(r'Host\s+=?(.*)\n?', re.IGNORECASE)
 def skim_get_ssh(event, dirs_only=False):
