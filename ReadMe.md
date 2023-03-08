@@ -39,15 +39,15 @@ xontribs = [ "skim", # Initializes skim (polyglot asdf-like runtime manager)
 ]
 # ↓ optional configuration variables (use `False` to disable a keybind)
 if 'skim' in xontribs: # Configure skim only if you're actually loading it
-  # config var                	  value		 |default|alt_cmd¦ comment
-  envx["X_SKIM_KEY_HIST"]     	= "⎈s" 		#|c-s|             False¦ Search in history entries and insert the chosen command
-  envx["X_SKIM_KEY_HIST_CWD→"]	= "⎇s" 		#|['escape','s']|  False¦ Search in history entries' CWD and CD to the selected item (if exists, do nothing otherwise)
-  envx["X_SKIM_KEY_HIST_CWD"] 	= "⎈⎇s"	#|['escape','c-s']|False¦ Search in history entries' CWD and insert the selected item(s)
-  envx["X_SKIM_KEY_HIST_Z→"]  	= "⎇z" 		#|['escape','z']|  False¦ Search in zoxide's history entries and CD to the selected item (if exists, do nothing otherwise)
-  envx["X_SKIM_KEY_HIST_Z"]   	= "⎈⎇z"	#|['escape','c-z']|False¦ Search in zoxide's history entries and insert the selected item(s)
-  envx["X_SKIM_KEY_FILE"]     	= "⎈f" 		#|c-f|             False¦ Find files in the current directory and its sub-directories
-  envx["X_SKIM_KEY_DIR"]      	= "⎇f" 		#|['escape','f']|  False¦ Find dirs  in the current directory and its sub-directories
-  envx["X_SKIM_KEY_SSH"]      	= "⎈b" 		#|c-b|             False¦ Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
+  # config var                	  value	 |default|alt_cmd¦ comment
+  envx["X_SKIM_KEY_HIST"]     	= "⎈s" 	#|c-s|             False¦ Search in history entries and insert the chosen command
+  envx["X_SKIM_KEY_HIST_CWD→"]	= "⎇s" 	#|['escape','s']|  False¦ Search in history entries' CWD and CD to the selected item (if exists, do nothing otherwise)
+  envx["X_SKIM_KEY_HIST_CWD"] 	= "⎈⎇s"#|['escape','c-s']|False¦ Search in history entries' CWD and insert the selected item(s)
+  envx["X_SKIM_KEY_HIST_Z→"]  	= "⎇z"	#|['escape','z']|  False¦ Search in zoxide's history entries and CD to the selected item (if exists, do nothing otherwise)
+  envx["X_SKIM_KEY_HIST_Z"]   	= "⎈⎇z"#|['escape','c-z']|False¦ Search in zoxide's history entries and insert the selected item(s)
+  envx["X_SKIM_KEY_FILE"]     	= "⎈f"	#|c-f|             False¦ Find files in the current directory and its sub-directories
+  envx["X_SKIM_KEY_DIR"]      	= "⎇f"	#|['escape','f']|  False¦ Find dirs  in the current directory and its sub-directories
+  envx["X_SKIM_KEY_SSH"]      	= "⎈b"	#|c-b|             False¦ Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # Alt is also supported as either of: a- ⎇ ⌥ (converted to a prefix 'escape')
   # Control symbols are also supported as either of: ⎈ ⌃
@@ -60,10 +60,10 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_CMD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
   envx["X_SKIM_CWD_FRQ"]        	= True    	#|True|False¦ add ∑command runs at a given CWD
   envx["X_SKIM_CWD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
-  # envx["X_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" #|None| command used by skim to search for files
-  # envx["X_SKIM_CMD_FIND_DIR"] 	= "fd -t d      -c never" #|None| command used by skim to search for directories
-  # envx["X_SKIM_DIR_VIEW"]     	= "ls -F --color=always {2..}" #|None| preview function for Dir lists
-  # envx["SKIM_DEFAULT_OPTIONS"]	= "--ansi --preview-window=right:40%:wrap" # |None| other options to pass to skim
+  envx["X_SKIM_CMD_FIND"]       	= "fd -t f -t l" #|None| command used by skim to search for files
+  envx["X_SKIM_CMD_FIND_DIR"]   	= "fd -t d     " #|None| command used by skim to search for directories
+  envx["X_SKIM_DIR_VIEW"]       	= "ls -F --color=always {2..}" #|None| preview function for Dir lists
+  envx["SKIM_DEFAULT_OPTIONS"]  	= "--ansi --preview-window=right:40%:wrap" # |None| other options to pass to skim
 
 xontribs_load(xontribs_manual) # actually load all xontribs in the list
 ```
