@@ -251,11 +251,11 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   from prompt_toolkit.key_binding.key_bindings import _parse_key
 
   _default_keys = {
-    "X_SKIM_KEY_HISTORY"    	:"c-s",
-    "X_SKIM_KEY_HISTORY_CWD"	:['escape','s'],
-    "X_SKIM_KEY_FILE"       	:"c-f",
-    "X_SKIM_KEY_DIR"        	:['escape','f'],
-    "X_SKIM_KEY_SSH"        	:"c-b",
+    "X_SKIM_KEY_HIST"     	: "c-s",
+    "X_SKIM_KEY_HIST_CWD" 	: ['escape','c-s'],
+    "X_SKIM_KEY_FILE"     	: "c-f",
+    "X_SKIM_KEY_DIR"      	: ['escape','f'],
+    "X_SKIM_KEY_SSH"      	: "c-b",
     }
 
   def handler(key_user_var):
@@ -298,12 +298,12 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
       else:
         return bindings.add( key_def)
 
-  @handler("X_SKIM_KEY_HISTORY")
+  @handler("X_SKIM_KEY_HIST")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
     skim_get_history_cmd(event)
-  @handler("X_SKIM_KEY_HISTORY_CWD")
-  def skim_history_cwd(event): # Search in history entries' CWD
-    skim_get_history_cwd(event)
+  @handler("X_SKIM_KEY_HIST_CWD")
+  def skim_history_cwd(event): # Search in history entries' CWD and insert the selected item(s)
+    skim_get_history_cwd(event, cd=False)
 
   @handler("X_SKIM_KEY_FILE")
   def skim_file(event): # Find files in the current directory and its sub-directories
