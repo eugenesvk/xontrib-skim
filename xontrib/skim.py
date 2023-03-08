@@ -130,19 +130,16 @@ def skim_proc_run(event,data_type,env=envx): # Run a skim process with default a
     return
   args = skim_get_args(event,data_type)
   skim_cmd = [bin] + args
-  if   data_type == 'file':
-    skim_proc = subprocess.run(  skim_cmd,            stdout=PIPE, text=True, env=env)
-    return skim_proc
+  skim_proc = subprocess.run(  skim_cmd,            stdout=PIPE, text=True, env=env)
+  return skim_proc
 
 def skim_proc_open(event,data_type): # Create a skim process with default args and return it
   if not (bin := get_bin(base)):
     return
   args = skim_get_args(event,data_type)
   skim_cmd = [bin] + args
-  if   data_type == 'history' or \
-       data_type == 'ssh':
-    skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
-    return skim_proc
+  skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
+  return skim_proc
 
 def skim_proc_close(event, skim_proc, prefix=""): # Close the given skim process and reset shell
   skim_proc.stdin.close()
