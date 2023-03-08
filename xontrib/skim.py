@@ -239,6 +239,23 @@ def _on_close_paths_multiline(event, paths, prefix=""):  # todo: replace _intern
       q_beg, q_end = '"', '"'
     cmd += _quote_paths([str(Path(prefix,p.strip()))], start=q_beg,end=q_end)[0].pop() + ' ' # ({'p'}, True) → [0].pop() → 'p'
   buf.insert_text(cmd.strip())
+
+
+re_zoxide_index = re.compile(r'^[0-9. ]*', re.IGNORECASE|re.MULTILINE)
+def skim_get_history_cwd_zoxide(event, cd=False): # Run skim, pipe zoxide dir history to it, get the chosen item printed to stdout
+  if not (bin_ := get_bin('zoxide')):
+    return
+  args = ['query','-ls']
+  zoxide_cmd = [bin_] + args
+
+  data_type = ['zoxide'] if cd else ['zoxide', 'file']
+  skim_proc = skim_proc_open(event, data_type)
+  subprocess.run(zoxide_cmd, stdout=skim_proc.stdin, text=True)
+  if cd:
+    skim_proc_close(event, skim_proc, re_deprefix=re_zoxide_index, func=_on_close_cd_inline)
+  else:
+    skim_proc_close(event, skim_proc, re_deprefix=re_zoxide_index, func=_on_close_paths_multiline)
+
 def get_dir_complete(line):
   ctx_parse	= CompletionContextParser().parse
   if (cmd := ctx_parse(line, len(line)).command).prefix:
@@ -328,6 +345,8 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
     "X_SKIM_KEY_HIST"     	: "c-s",
     "X_SKIM_KEY_HIST_CWD→"	: ['escape','s'],
     "X_SKIM_KEY_HIST_CWD" 	: ['escape','c-s'],
+    "X_SKIM_KEY_HIST_Z→"  	: ['escape','z'],
+    "X_SKIM_KEY_HIST_Z"   	: ['escape','c-z'],
     "X_SKIM_KEY_FILE"     	: "c-f",
     "X_SKIM_KEY_DIR"      	: ['escape','f'],
     "X_SKIM_KEY_SSH"      	: "c-b",
@@ -382,6 +401,12 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   @handler("X_SKIM_KEY_HIST_CWD")
   def skim_history_cwd(event): # Search in history entries' CWD and insert the selected item(s)
     skim_get_history_cwd(event, cd=False)
+  @handler("X_SKIM_KEY_HIST_Z→")
+  def skim_history_cwd_zoxide(event): # Search in zoxide's history entries and CD to the selected item
+    skim_get_history_cwd_zoxide(event, cd=True)
+  @handler("X_SKIM_KEY_HIST_Z")
+  def skim_history_cwd_zoxide(event): # Search in zoxide's history entries and insert the selected item(s)
+    skim_get_history_cwd_zoxide(event, cd=False)
 
   @handler("X_SKIM_KEY_FILE")
   def skim_file(event): # Find files in the current directory and its sub-directories

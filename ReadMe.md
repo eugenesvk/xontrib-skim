@@ -37,6 +37,8 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_KEY_HIST"]     	= "⎈s" 		#|c-s|             False¦ Search in history entries and insert the chosen command
   envx["X_SKIM_KEY_HIST_CWD→"]	= "⎇s" 		#|['escape','s']|  False¦ Search in history entries' CWD and CD to the selected item (if exists, do nothing otherwise)
   envx["X_SKIM_KEY_HIST_CWD"] 	= "⎈⎇s"	#|['escape','c-s']|False¦ Search in history entries' CWD and insert the selected item(s)
+  envx["X_SKIM_KEY_HIST_Z→"]  	= "⎇z" 		#|['escape','z']|  False¦ Search in zoxide's history entries and CD to the selected item (if exists, do nothing otherwise)
+  envx["X_SKIM_KEY_HIST_Z"]   	= "⎈⎇z"	#|['escape','c-z']|False¦ Search in zoxide's history entries and insert the selected item(s)
   envx["X_SKIM_KEY_FILE"]     	= "⎈f" 		#|c-f|             False¦ Find files in the current directory and its sub-directories
   envx["X_SKIM_KEY_DIR"]      	= "⎇f" 		#|['escape','f']|  False¦ Find dirs  in the current directory and its sub-directories
   envx["X_SKIM_KEY_SSH"]      	= "⎈b" 		#|c-b|             False¦ Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
