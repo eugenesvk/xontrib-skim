@@ -158,10 +158,10 @@ def skim_proc_close(event, skim_proc, prefix="", re_deprefix=None, replace=True,
 
   buf = event.current_buffer
   if (skim_out := skim_proc.stdout.read().strip()):
-    if prefix:
-      skim_out = prefix +' '+ skim_out
     if re_deprefix:
       skim_out = re_deprefix.sub('',skim_out)
+    if prefix:
+      skim_out = prefix +' '+ skim_out
 
     if func:
       func(event, skim_out)
