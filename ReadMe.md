@@ -65,7 +65,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_DIR_VIEW"]       	= "ls -F --color=always {2..}" #|None| preview function for Dir lists
   envx["SKIM_DEFAULT_OPTIONS"]  	= "--ansi --preview-window=right:40%:wrap" # |None| other options to pass to skim
 
-xontribs_load(xontribs_manual) # actually load all xontribs in the list
+xontribs_load(xontribs) # actually load all xontribs in the list
 ```
 
 2. Or just add this to your xonsh run control file
