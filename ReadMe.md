@@ -50,6 +50,8 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_KEY_CUSTOM"]     	= None    	#|None| a dictionary of {'key':'action'}
   envx["X_SKIM_NO_HEIGHT"]      	= True    	#|True|False¦ disable `--height` to fix a skim bug
   envx["X_SKIM_NO_SORT"]        	= True    	#|True|False¦ disable history sorting
+  envx["X_SKIM_CMD_FRQ"]        	= True    	#|True|False¦ add ∑command runs for a given command
+  envx["X_SKIM_CMD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
   envx["X_SKIM_CWD_FRQ"]        	= True    	#|True|False¦ add ∑command runs at a given CWD
   envx["X_SKIM_CWD_FRQ_MIN"]    	= 5       	#|5| hide frequency numbers below this
   # envx["X_SKIM_CMD_FIND"]     	= "fd -t f -t l -c never" # |None| command used by skim to search for files

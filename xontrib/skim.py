@@ -169,9 +169,32 @@ def skim_proc_close(event, skim_proc, prefix="", re_deprefix=None, replace=True,
       buf.insert_text(skim_out.strip())
 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
-  skim_proc = skim_proc_open(event, 'history')
-  historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
-  skim_proc_close(event, skim_proc, replace=True)
+  data_type = ['history']
+  if (freq := envx.get("X_SKIM_CMD_FRQ",True)):
+    data_type += ['freq']
+  skim_proc = skim_proc_open(event, data_type)
+  re_deprefix = None
+  if freq:
+    if (histx := XSH.history) is None:
+      return
+    re_deprefix = re_zoxide_index
+    cmds_processed = dict()
+    for entry in histx.all_items():
+      if   (cmd   := entry.get("inp")):
+        if (cmd_f := entry.get("frequency")):
+          cmds_processed[cmd.strip()] = cmd_f
+        else:
+          cmds_processed[cmd.strip()] = 0
+    _pad_freq = len(str(max(cmds_processed.values())))
+    _min = int(envx.get("X_SKIM_CMD_FRQ_MIN",5))
+    for k,v in cmds_processed.items():
+      if v >= _min:
+        skim_proc.stdin.write(f"{str(v).rjust(_pad_freq)} {k}\0")
+      else:
+        skim_proc.stdin.write(f"{    ''.rjust(_pad_freq)} {k}\0")
+  else:
+    historyx(args=["show","--null-byte","xonsh"], stdout=skim_proc.stdin) # 'xonsh' session separated by null
+  skim_proc_close(event, skim_proc, re_deprefix=re_deprefix, replace=True)
 
 def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to it, get the chosen item(s) printed to stdout OR cd to a single chosen item
   if (histx := XSH.history) is None:
