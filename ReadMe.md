@@ -77,7 +77,33 @@ $X_SKIM_KEY_HISTORY	= "c-s" # ...
 
 ## Examples
 
-...
+- `cd` to a path in-place without losing the command you've already typed in the prompt!
+
+    1. Press <kbd>⎇</kbd><kbd>s</kbd> (for command history CWD's) or <kbd>⎇</kbd><kbd>z</kbd> (for zoxide's history) to launch fuzzy finder of your favorite dirs<br/>
+![cd inplace 1](<./doc/img/cd inplace 1.png>)
+
+    2. Find the correct dir and insert it<br/>
+![cd inplace 2](<./doc/img/cd inplace 2.png>)
+
+    3. The prompt is updated in the background, reflecting the dir change and preserving the command<br/>
+![cd inplace 3](<./doc/img/cd inplace 3.png>)
+
+- Find fils/dirs in xonsh-completed paths: type `cd ~/Mus`; hit <kbd>⎈</kbd><kbd>F</kbd> to limit your file search to `~/Music`
+
+- Find files with <kbd>⎈</kbd><kbd>F</kbd> and dirs with <kbd>⎇</kbd><kbd>F</kbd>
+```py
+envx["X_SKIM_KEY_FILE"]	= "⎇f"
+envx["X_SKIM_KEY_DIR"] 	= "⎈f"
+```
+
+- Insert multiple paths with home row cursor keys
+  <br/><kbd>⎇</kbd><kbd>J</kbd> to toggle and ▼
+  <br/><kbd>⎇</kbd><kbd>K</kbd> to toggle and ▲
+  ```py
+  envx["X_SKIM_KEY_CUSTOM"]	= {
+    'alt-j':'toggle+down'  	,
+    'alt-k':'toggle+up'    	}
+  ```
 
 ## Known issues
 
