@@ -112,6 +112,12 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
       "--no-multi"	, # disable multi-select
     ]
 
+  if 'freq' in data_type:
+    skim_args += [
+      "--delimiter=[^\t\n ][\t\n ]+"	, # field delimiter regex for --nth (default: AWK-style)
+      "-n2.."                       	, # limit search scope from field#2 to the last
+    ]
+
   if not _no_height: # todo: move ↑ after https://github.com/lotabout/skim/issues/494 is fixed
     skim_args += [
       f"--height={_height}"	, # display sk window below the cursor with the given height instead of using the full screen
@@ -171,17 +177,37 @@ def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to
   if (histx := XSH.history) is None:
     return
   data_type = ['history'] if cd else ['history', 'file']
+  if (freq := envx.get("X_SKIM_CWD_FRQ",True)):
+    data_type += ['freq']
   skim_proc = skim_proc_open(event, data_type)
-  cwds_processed = set()
-  for entry in histx.all_items():
-    if (cwd := entry.get("cwd")) and\
-       (cwd not in cwds_processed):
-      cwds_processed.add(cwd)
-      skim_proc.stdin.write(f"{cwd}\0")
-  if cd:
-    skim_proc_close(event, skim_proc, func=_on_close_cd_inline, replace=False)
+  re_deprefix = None
+  if freq:
+    re_deprefix = re_zoxide_index
+    cwds_processed = dict()
+    for entry in histx.all_items():
+      if (cwd := entry.get("cwd")):
+        if cwd in cwds_processed:
+          cwds_processed[cwd] += 1
+        else:
+          cwds_processed[cwd]  = 1
+    _pad_freq = len(str(max(cwds_processed.values())))
+    _min = int(envx.get("X_SKIM_CWD_FRQ_MIN",5))
+    for k,v in cwds_processed.items():
+      if v >= _min:
+        skim_proc.stdin.write(f"{str(v).rjust(_pad_freq)} {k}\0")
+      else:
+        skim_proc.stdin.write(f"{    ''.rjust(_pad_freq)} {k}\0")
   else:
-    skim_proc_close(event, skim_proc, func=_on_close_paths_multiline, replace=False)
+    cwds_processed = set()
+    for entry in histx.all_items():
+      if (cwd := entry.get("cwd")) and\
+         (cwd not in cwds_processed):
+        cwds_processed.add(cwd)
+        skim_proc.stdin.write(f"{cwd}\0")
+  if cd:
+    skim_proc_close(event, skim_proc, re_deprefix=re_deprefix, func=_on_close_cd_inline      , replace=False)
+  else:
+    skim_proc_close(event, skim_proc, re_deprefix=re_deprefix, func=_on_close_paths_multiline, replace=False)
 
 from xonsh.style_tools import partial_color_tokenize
 from prompt_toolkit.formatted_text import PygmentsTokens
