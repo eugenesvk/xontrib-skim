@@ -356,13 +356,18 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
     def skip(func):
       pass
 
+    if envx.get('SHELL_TYPE') in ["prompt_toolkit", "prompt_toolkit2"]:
+      bind_add = bindings.add
+    else:
+      bind_add = bindings.registry.add_binding
+
     key_user = envx.get(     key_user_var, None)
     key_def  = _default_keys[key_user_var]
     if   key_user == None:     # doesn't exist       → use default
       if type(key_def) == list:
-        return bindings.add(*key_def)
+        return bind_add(*key_def)
       else:
-        return bindings.add( key_def)
+        return bind_add( key_def)
     elif key_user == False:    # exists and disabled → don't bind
       return skip
     else:                      # remove whitespace
@@ -380,17 +385,17 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
     if   type(key_user) == str  and\
          key_user in ALL_KEYS: # exists and   valid  → use it
-      return bindings.add(key_user)
+      return bind_add(key_user)
     elif type(key_user) == list and\
       all(k in ALL_KEYS or _parse_key(k) for k in key_user):
-      return bindings.add(*key_user)
+      return bind_add(*key_user)
     else:                      # exists and invalid  → use default
       print_color("{BLUE}xontrib-skim:{RESET} your "+key_user_var+" '{BLUE}"+str(key_user)+"{RESET}' is {RED}invalid{RESET}; "+\
         "using the default '{BLUE}"+str(key_def)+"{RESET}'; run ↓ to see the allowed list\nfrom prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)")
       if type(key_def) == list:
-        return bindings.add(*key_def)
+        return bind_add(*key_def)
       else:
-        return bindings.add( key_def)
+        return bind_add( key_def)
 
   @handler("X_SKIM_KEY_HIST")
   def skim_history_cmd(event): # Search in history entries and insert the chosen command
