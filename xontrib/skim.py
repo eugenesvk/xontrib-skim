@@ -267,11 +267,9 @@ def _update_prompt(): # force-update all 3 prompts (if exist) to the newer value
   shellx.prompter.app.invalidate()      # send signal that prompt needs update
 
 def _on_close_cd_inline(event, path: typing.Optional[typing.AnyStr] = None) -> None:
+  _cd_inline(path)
+def _cd_inline(path: typing.Optional[typing.AnyStr] = None) -> None:
   """Change dir without creating a new prompt line, updating existing instead"""
-  buf = event.current_buffer
-  doc = buf.document
-  cli = event.cli
-
   if path is None:
     args = []
   elif isinstance(path, bytes):
@@ -285,11 +283,8 @@ def _on_close_cd_inline(event, path: typing.Optional[typing.AnyStr] = None) -> N
   if exc is not None:
     raise Exception(exc)
   else:
-    _text = doc.current_line_before_cursor
-    buf.delete_before_cursor(len(_text))
     t = threading.Thread(target=_update_prompt, args=())
     t.start()
-    buf.insert_text(_text.strip())
 
 def _on_close_paths_multiline(event, paths, prefix=""):  # todo: replace _internal _quote_paths
   buf	= event.current_buffer
