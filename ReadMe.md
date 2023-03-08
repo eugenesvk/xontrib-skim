@@ -38,7 +38,7 @@ if 'skim' in xontribs: # Configure skim only if you're actually loading it
   envx["X_SKIM_KEY_HISTORY_CWD"]	= "⎇s" 	#|['escape','s']|False¦ ⎇s Search in history entries' CWD and insert the chosen command
   envx["X_SKIM_KEY_FILE"]       	= "⎈f" 	#|c-f|False¦ ⎈f Find files in the current directory and its sub-directories
   envx["X_SKIM_KEY_DIR"]        	= "⎇f" 	#|['escape','f']|False¦ ⎇f Find dirs  in the current directory and its sub-directories
-  envx["X_SKIM_KEY_SSH"]        	= "⎈b" 	#|c-b|False¦ ⎈B Search in /etc/ssh/ssh_config or ~/.ssh/config items and issue ssh command on the chosen item
+  envx["X_SKIM_KEY_SSH"]        	= "⎈b" 	#|c-b|False¦ ⎈B Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # Alt is also supported as either of: a- ⎇ ⌥ (converted to a prefix 'escape')
   # Control symbols are also supported as either of: ⎈ ⌃

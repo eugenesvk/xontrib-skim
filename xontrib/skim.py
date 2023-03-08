@@ -2,6 +2,7 @@
 skim (fuzzy finder) integration
 """
 import subprocess
+import re
 from os                              	import environ, chdir  #
 from pathlib                         	import Path     #
 from xonsh.built_ins                 	import XSH
@@ -89,6 +90,11 @@ def skim_get_args(event, data_type): # get a list of skim arguments, combining d
     skim_args += [
       "--multi"	, # enable multi-select
     ]
+  elif data_type == 'ssh':
+    skim_args += [
+      "--read0"   	, # Read input delimited by NUL instead of ␤
+      "--no-multi"	, # disable multi-select
+    ]
 
   if not _no_height: # todo: move ↑ after https://github.com/lotabout/skim/issues/494 is fixed
     skim_args += [
@@ -117,7 +123,8 @@ def skim_proc_open(event,data_type): # Create a skim process with default args a
     return
   args = skim_get_args(event,data_type)
   skim_cmd = [bin] + args
-  if   data_type == 'history':
+  if   data_type == 'history' or \
+       data_type == 'ssh':
     skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
     return skim_proc
 
@@ -129,8 +136,8 @@ def skim_proc_close(event, skim_proc, prefix=""): # Close the given skim process
 
   buf = event.current_buffer
   if (skim_out := skim_proc.stdout.read().strip()):
-    buf.text           	= skim_out
-    buf.cursor_position	= len(skim_out)
+    buf.text           	=     prefix + skim_out
+    buf.cursor_position	= len(prefix + skim_out)
 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
   skim_proc = skim_proc_open(event, 'history')
@@ -212,6 +219,32 @@ def skim_get_file(event, dirs_only=False):
 
     buf.insert_text(cmd.strip())
 
+re_Host = re.compile(r'Host\s+=?(.*)\n?', re.IGNORECASE)
+def skim_get_ssh(event, dirs_only=False):
+  buf	= event.current_buffer
+
+  skim_proc = skim_proc_open(event, 'ssh')
+  host_processed = set()
+  ssh_src = ["~/.ssh/config", "/etc/ssh/ssh_config"]
+  for ssh_file in ssh_src:
+    if (p := Path(ssh_file).expanduser()).is_file():
+      with p.open() as f:
+        for line in f:
+          if (match := re_Host.search(line)):
+            if (hostname := match.group(1)) not in host_processed:
+              host_processed.add(hostname)
+              skim_proc.stdin.write(f"{hostname}\0")
+  ssh_hist = ["~/.ssh/known_hosts"]
+  for ssh_file in ssh_hist:
+    if (p := Path(ssh_file).expanduser()).is_file():
+      with p.open() as f:
+        for line in f:
+          if len(match := line.split(',')) > 1:
+            if (hostname := match[0]) not in host_processed:
+              host_processed.add(hostname)
+              skim_proc.stdin.write(f"{hostname}\0")
+  skim_proc_close(event, skim_proc, prefix='ssh', replace=True)
+
 
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
   from prompt_toolkit.key_binding.key_bindings import _parse_key
@@ -276,6 +309,9 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
   def skim_dir(event):  # Find dirs  in the current directory and its sub-directories
     skim_get_dir(event)
 
+  @handler("X_SKIM_KEY_SSH")
+  def skim_ssh(event):  # Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
+    skim_get_ssh(event)
 
 
 def _activate_skim():
