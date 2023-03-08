@@ -207,19 +207,27 @@ def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to
   if freq:
     re_deprefix = re_zoxide_index
     cwds_processed = dict()
+    cwd_count = 0
     for entry in histx.all_items():
+      cwd_count += 1
       if (cwd := entry.get("cwd")):
         if cwd in cwds_processed:
-          cwds_processed[cwd] += 1
+          cwds_processed[cwd]['id']   = cwd_count
+          cwds_processed[cwd]['freq'] += 1
         else:
-          cwds_processed[cwd]  = 1
-    _pad_freq = len(str(max(cwds_processed.values())))
-    _min = int(envx.get("X_SKIM_CWD_FRQ_MIN",5))
+          cwds_processed[cwd] = {'id':cwd_count, 'freq':1}
+    _pad_freq = len(str(max([v['freq'] for v in cwds_processed.values()])))
+
+    cwds_by_id = dict()
     for k,v in cwds_processed.items():
-      if v >= _min:
-        skim_proc.stdin.write(f"{str(v).rjust(_pad_freq)} {k}\0")
+      cwds_by_id[v['id']] = {'path':k, 'freq':v['freq']}
+    cwds_sorted = dict(sorted(cwds_by_id.items()))
+    _min = int(envx.get("X_SKIM_CWD_FRQ_MIN",5))
+    for k,v in cwds_sorted.items():
+      if v['freq'] >= _min:
+        skim_proc.stdin.write(f"{str(v['freq']).rjust(_pad_freq)} {v['path']}\0")
       else:
-        skim_proc.stdin.write(f"{    ''.rjust(_pad_freq)} {k}\0")
+        skim_proc.stdin.write(f"{            ''.rjust(_pad_freq)} {v['path']}\0")
   else:
     cwds_processed = set()
     for entry in histx.all_items():
