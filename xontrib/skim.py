@@ -395,6 +395,25 @@ def skim_get_ssh(event, dirs_only=False):
               skim_proc.stdin.write(f"{hostname}\0")
   skim_proc_close(event, skim_proc, prefix='ssh', replace=True)
 
+def _parse_key_user(key_user):
+  _key_symb = {
+    '⎈':'c-'  ,'⌃':'c-'   ,
+    '▼':'down' ,'↓':'down' ,
+    '▲':'up'   ,'↑':'up'   ,
+    '◀':'left' ,'←':'left' ,
+    '▶':'right','→':'right',
+  }
+  _alts = ['a-','⌥','⎇']
+
+  for k,v in _key_symb.items(): # replace symbols
+    if k in key_user: # replace other keys
+      key_user = key_user.replace(k,v)
+  for alt in _alts:
+    if alt in key_user: # replace alt with an ⎋ sequence of keys
+      key_user = ['escape', key_user.replace(alt,'')]
+      break
+
+  return key_user
 
 re_despace = re.compile(r'\s', re.IGNORECASE)
 def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument in eventx.on_ptk_create)
@@ -427,15 +446,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
     else:                      # remove whitespace
       key_user = re_despace.sub('',key_user)
 
-    _controls = ['⎈','⌃']
-    for ctrl in _controls:
-      if ctrl in key_user: # replace ctrl symbols with ptk names
-        key_user = key_user.replace(ctrl,'c-')
-    _alts = ['a-','⌥','⎇']
-    for alt in _alts:
-      if alt in key_user: # replace alt with an ⎋ sequence of keys
-        key_user = ['escape', key_user.replace(alt,'')]
-        break
+    key_user = _parse_key_user(key_user)
 
     if   type(key_user) == str  and\
          key_user in ALL_KEYS: # exists and   valid  → use it
