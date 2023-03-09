@@ -172,7 +172,7 @@ def skim_proc_close(event, skim_proc, prefix="", re_deprefix=None, replace=True,
       buf.insert_text(skim_out.strip())
 
 def skim_get_history_cmd(event): # Run skim, pipe xonsh cmd history to it, get the chosen item printed to stdout
-  data_type = ['history']
+  data_type = ['history','cd']
   if (freq := envx.get("X_SKIM_CMD_FRQ",True)):
     data_type += ['freq']
   skim_proc = skim_proc_open(event, data_type)
