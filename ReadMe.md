@@ -21,7 +21,7 @@ Supported data sources:
   - xonsh history of commands (and their frequency)
   - xonsh history of commands' CWDs (and the frequency of commands started here)
   - zoxide's history of dirs
-  - (CWDs and dirs) support multi-selection (with proper escape-quoting) as well as `cd`-ing to the selected dir
+  <br/> CWDs/dirs support multi-selection (with proper escape-quoting) as well as `cd`-ing to the selected dir in-place
   - files in the current directory and its sub-directories
   - dirs in the current directory and its sub-directories
   - ssh hosts from `/etc/ssh/ssh_config`, `~/.ssh/config`, `~/.ssh/known_hosts`
