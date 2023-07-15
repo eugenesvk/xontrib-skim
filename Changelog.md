@@ -4,35 +4,23 @@ All notable changes to this project will be documented in this file
 [unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.1...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
-    <!-- + :sparkles:  -->
-    <!-- new features -->
+  <!--   + :sparkles:  -->
+  <!--   new features -->
   <!-- - __Changed__ -->
-    <!-- +   -->
-    <!-- changes in existing functionality -->
+  <!--   +   -->
+  <!--   changes in existing functionality -->
   <!-- - __Fixed__ -->
-    <!-- + :beetle:  -->
-    <!-- bug fixes -->
+  <!--   + :beetle:  -->
+  <!--   bug fixes -->
   <!-- - __Deprecated__ -->
-    <!-- + :poop:  -->
-    <!-- soon-to-be removed features -->
+  <!--   + :poop:  -->
+  <!--   soon-to-be removed features -->
   <!-- - __Removed__ -->
-    <!-- + :wastebasket:  -->
-    <!-- now removed features -->
+  <!--   + :wastebasket:  -->
+  <!--   now removed features -->
   <!-- - __Security__ -->
-    <!-- + :lock:  -->
-    <!-- vulnerabilities -->
-  - __Added__
-    + :sparkles: 
-  - __Changed__
-    +  
-  - __Fixed__
-    + :beetle: 
-  - __Deprecated__
-    + :poop: 
-  - __Removed__
-    + :wastebasket: 
-  - __Security__
-    + :lock: 
+  <!--   + :lock:  -->
+  <!--   vulnerabilities -->
 
 [0.0.1]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.1
 ## [0.0.1]
