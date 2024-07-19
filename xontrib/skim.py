@@ -39,7 +39,7 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
     bin = XSH.commands_cache.     locate_binary(base, ignore_alias=True)
   if not bin:
     PATH = envx.get("PATH")
-    print(f"Cannot find '{base}' in {PATH}")
+    print_color(f"Cannot find {{BLUE}}{base}{{RESET}} in {PATH}")
     return None
   else:
     return bin
