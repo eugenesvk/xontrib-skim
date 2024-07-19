@@ -252,7 +252,7 @@ def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to
 
 from xonsh.style_tools import partial_color_tokenize
 from prompt_toolkit.formatted_text import PygmentsTokens
-from xonsh.ptk_shell.shell import tokenize_ansi
+from xonsh.shells.ptk_shell import tokenize_ansi
 def _p_msg_fmt(s):
   return tokenize_ansi(PygmentsTokens(partial_color_tokenize(XSH.shell.shell.prompt_formatter(s))))
 
