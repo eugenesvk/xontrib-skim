@@ -34,7 +34,7 @@ from xonsh.xontribs 	import xontribs_load
 from xonsh.built_ins	import XSH
 envx = XSH.env
 
-xontribs = [ "skim", # Initializes skim (polyglot asdf-like runtime manager)
+xontribs = [ "skim", # Initializes skim (Fuzzy Finder)
  # your other xontribs
 ]
 # ↓ optional configuration variables (use `False` to disable a keybind)
