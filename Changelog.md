@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.1...HEAD
+[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.4...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨  -->
@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file
   <!--   + 🔒  -->
   <!--   vulnerabilities -->
 
+[0.0.4]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.4
+## [0.0.4]
   - __Fixed__
     + 🐞 work with changed import paths in xonsh v18
     + 🐞 poetry test
