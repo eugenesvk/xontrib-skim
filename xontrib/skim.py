@@ -451,12 +451,12 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
 
     key_user = envx.get(     key_user_var, None)
     key_def  = _default_keys[key_user_var]
-    if   key_user == None:     # doesn't exist       → use default
+    if   key_user is None:     # doesn't exist       → use default
       if type(key_def) == list:
         return bindings.add(*key_def)
       else:
         return bindings.add( key_def)
-    elif key_user == False:    # exists and disabled → don't bind
+    elif key_user is False:    # exists and disabled → don't bind
       return skip
     else:                      # remove whitespace
       key_user = re_despace.sub('',key_user)
