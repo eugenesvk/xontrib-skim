@@ -469,19 +469,19 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
         return bindings.add( key_def)
 
   @handler("X_SKIM_KEY_HIST")
-  def skim_history_cmd(event): # Search in history entries and insert the chosen command
-    skim_get_history_cmd(event)
+  def skim_history_cmd         (event          ): # Search in xonsh 's history entries      and ⎀insert the chosen command
+    skim_get_history_cmd       (event          )
   @handler("X_SKIM_KEY_HIST_CWD→")
-  def skim_history_cwd(event): # Search in history entries' CWD and CD to the selected item
-    skim_get_history_cwd(event, cd=True)
+  def skim_history_cwd         (event          ): # Search in xonsh 's history entries' CWD and →CD to  the chosen item
+    skim_get_history_cwd       (event, cd=True )
   @handler("X_SKIM_KEY_HIST_CWD")
-  def skim_history_cwd(event): # Search in history entries' CWD and insert the selected item(s)
-    skim_get_history_cwd(event, cd=False)
+  def skim_history_cwd         (event          ): # Search in xonsh 's history entries' CWD and ⎀insert the chosen item(s)
+    skim_get_history_cwd       (event, cd=False)
   @handler("X_SKIM_KEY_HIST_Z→")
-  def skim_history_cwd_zoxide(event): # Search in zoxide's history entries and CD to the selected item
-    skim_get_history_cwd_zoxide(event, cd=True)
+  def skim_history_cwd_zoxide  (event          ): # Search in zoxide's history entries      and →CD to  the chosen item
+    skim_get_history_cwd_zoxide(event, cd=True )
   @handler("X_SKIM_KEY_HIST_Z")
-  def skim_history_cwd_zoxide(event): # Search in zoxide's history entries and insert the selected item(s)
+  def skim_history_cwd_zoxide  (event          ): # Search in zoxide's history entries      and ⎀insert the chosen item(s)
     skim_get_history_cwd_zoxide(event, cd=False)
 
   @handler("X_SKIM_KEY_FILE")
