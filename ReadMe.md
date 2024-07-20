@@ -37,33 +37,33 @@ xontribs = [ "skim", # Initializes skim (Fuzzy Finder)
 ]
 # ↓ optional configuration variables (use `False` to disable a keybind)
 if 'skim' in xontribs: # Configure skim only if you're actually loading it
-  #Config var                 	  Value	 	  	 ≝Default         ¦Alt_cmd	  Comment
-  envx["X_SKIM_KEY_HIST"]     	= "⎈   	 	s"	#≝c-s              ¦False 	Search in xonsh 's history entries      and ⎀insert the chosen command
-  envx["X_SKIM_KEY_HIST_CWD→"]	= "    	⎇	s"	#≝['escape','s']   ¦False 	Search in xonsh 's history entries' CWD and →CD to  the selected item (if exists, do nothing otherwise)
-  envx["X_SKIM_KEY_HIST_CWD"] 	= "⎈   	⎇	s"	#≝['escape','c-s'] ¦False 	Search in xonsh 's history entries' CWD and ⎀insert the selected item(s)
-  envx["X_SKIM_KEY_HIST_Z→"]  	= "    	⎇	z"	#≝['escape','z']   ¦False 	Search in zoxide's history entries      and →CD to  the selected item (if exists, do nothing otherwise)
-  envx["X_SKIM_KEY_HIST_Z"]   	= "⎈   	⎇	z"	#≝['escape','c-z'] ¦False 	Search in zoxide's history entries      and ⎀insert the selected item(s)
-  envx["X_SKIM_KEY_FILE"]     	= "⎈   	 	f"	#≝c-f              ¦False 	Find files in the current directory and its sub-directories
-  envx["X_SKIM_KEY_DIR"]      	= "    	⎇	f"	#≝['escape','f']   ¦False 	Find dirs  in the current directory and its sub-directories
-  envx["X_SKIM_KEY_SSH"]      	= "⎈   	 	b"	#≝c-b              ¦False 	Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
+  #Config var                    Value   ≝Default          ¦Alt_cmd	  Comment
+  envx["X_SKIM_KEY_HIST"     ] = "⎈  s" #≝c-s             ¦False Search in xonsh 's history entries      and ⎀insert the chosen command
+  envx["X_SKIM_KEY_HIST_CWD→"] = "  ⎇s" #≝['escape','s']  ¦False Search in xonsh 's history entries' CWD and →CD to  the selected item (if exists, do nothing otherwise)
+  envx["X_SKIM_KEY_HIST_CWD" ] = "⎈⎇s" #≝['escape','c-s']¦False Search in xonsh 's history entries' CWD and ⎀insert the selected item(s)
+  envx["X_SKIM_KEY_HIST_Z→"  ] = "  ⎇z" #≝['escape','z']  ¦False Search in zoxide's history entries      and →CD to  the selected item (if exists, do nothing otherwise)
+  envx["X_SKIM_KEY_HIST_Z"   ] = "⎈⎇z" #≝['escape','c-z']¦False Search in zoxide's history entries      and ⎀insert the selected item(s)
+  envx["X_SKIM_KEY_FILE"     ] = "⎈  f" #≝c-f             ¦False Find files in the current directory and its sub-directories
+  envx["X_SKIM_KEY_DIR"      ] = "  ⎇f" #≝['escape','f']  ¦False Find dirs  in the current directory and its sub-directories
+  envx["X_SKIM_KEY_SSH"      ] = "⎈  b" #≝c-b             ¦False Run 'ssh HOST' for hosts in /etc/ssh/ssh_config, ~/.ssh/config, ~/.ssh/known_hosts
 
   # run to see the allowed list for ↑: from prompt_toolkit.keys import ALL_KEYS; print(ALL_KEYS)
   # Alt is also supported as either of: a- ⎇ ⌥ (converted to a prefix 'escape')
   # Control symbols are also supported as either of: ⎈ ⌃
   # ↓ are key bindings for the skim binary itself, not this xontrib, so use skim rules https://github.com/lotabout/skim#keymap
-  #Config var                   	  Value         	 ≝Default	¦Alt_cmd	Comment
-  envx["X_SKIM_KEY_SORT_TOGGLE"]	= "ctrl-r"      	#≝ctrl-r 	¦False  	⎈R binding for 'toggle-sort'
-  envx["X_SKIM_KEY_CUSTOM"]     	= None          	#≝None   	¦{'key':'action'}
-  envx["X_SKIM_NO_HEIGHT"]      	= True          	#≝True   	¦False	disable `--height` to fix a skim bug
-  envx["X_SKIM_NO_SORT"]        	= True          	#≝True   	¦False	disable history sorting
-  envx["X_SKIM_CMD_FRQ"]        	= True          	#≝True   	¦False	add ∑command runs for a given command
-  envx["X_SKIM_CMD_FRQ_MIN"]    	= 5             	#≝5      	¦     	hide frequency numbers below this
-  envx["X_SKIM_CWD_FRQ"]        	= True          	#≝True   	¦False	add ∑command runs at a given CWD
-  envx["X_SKIM_CWD_FRQ_MIN"]    	= 5             	#≝5      	¦     	hide frequency numbers below this
-  envx["X_SKIM_CMD_FIND"]       	= "fd -t f -t l"	#≝None   	      	command used by skim to search for files
-  envx["X_SKIM_CMD_FIND_DIR"]   	= "fd -t d     "	#≝None   	      	command used by skim to search for directories
-  envx["X_SKIM_DIR_VIEW"]       	= "ls -F --color=always {2..}" #≝None   preview function for Dir lists
-  envx["SKIM_DEFAULT_OPTIONS"]  	= "--ansi --preview-window=right:40%:wrap" #≝None   other options to pass to skim
+  #Config var                  	  Value     ≝Default¦Alt_cmd  Comment
+  envx["X_SKIM_KEY_SORT_TOGGLE"	] = "ctrl-r" #≝ctrl-r ¦False    ⎈R binding for 'toggle-sort'
+  envx["X_SKIM_KEY_CUSTOM"     	] = None     #≝None   ¦{'key':'action'}
+  envx["X_SKIM_NO_HEIGHT"      	] = True     #≝True   ¦False  disable `--height` to fix a skim bug
+  envx["X_SKIM_NO_SORT"        	] = True     #≝True   ¦False  disable history sorting
+  envx["X_SKIM_CMD_FRQ"        	] = True     #≝True   ¦False  add ∑command runs for a given command
+  envx["X_SKIM_CMD_FRQ_MIN"    	] = 5        #≝5      ¦       hide frequency numbers below this
+  envx["X_SKIM_CWD_FRQ"        	] = True     #≝True   ¦False  add ∑command runs at a given CWD
+  envx["X_SKIM_CWD_FRQ_MIN"    	] = 5        #≝5      ¦       hide frequency numbers below this
+  envx["X_SKIM_CMD_FIND"       	] = "fd -t f -t l" #≝None      command used by skim to search for files
+  envx["X_SKIM_CMD_FIND_DIR"   	] = "fd -t d     " #≝None      command used by skim to search for directories
+  envx["X_SKIM_DIR_VIEW"       	] = "ls -F --color=always {2..}" #≝None  preview function for Dir lists
+  envx["SKIM_DEFAULT_OPTIONS"  	] = "--ansi --preview-window=right:40%:wrap" #≝None   other options to pass to skim
 
 xontribs_load(xontribs) # actually load all xontribs in the list
 ```
