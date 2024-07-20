@@ -458,7 +458,7 @@ def skim_keybinds(bindings, **_): # Add skim keybinds (when use as an argument i
         return bindings.add( key_def)
     elif key_user is False:    # exists and disabled → don't bind
       return skip
-    else:                      # remove whitespace
+    elif type(key_user) == str:# remove whitespace
       key_user = re_despace.sub('',key_user)
 
     key_user = _parse_key_user(key_user)
