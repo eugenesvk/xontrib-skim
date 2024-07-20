@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.4...HEAD
+[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.5...HEAD
 ## [Unreleased]
   <!-- - __Added__ -->
   <!--   + ✨  -->
@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file
   <!--   + 🔒  -->
   <!--   vulnerabilities -->
 
+[0.0.5]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.5
+## [0.0.5]
   - __Changed__
     + make `X_SKIM_KEY_HIST_CWD→` consistent with `X_SKIM_KEY_HIST_Z→` and not prefill skim's query with currently typed command line text
 

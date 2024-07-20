@@ -1,6 +1,6 @@
 [tool.poetry]
 name       	= "xontrib-skim"
-version    	= "0.0.4"
+version    	= "0.0.5"
 description	= "skim (fuzzy finder) integration"
 authors    	= ["Evgeny <es.bugzilla@gmail.com>"]
 license    	= "MIT"
