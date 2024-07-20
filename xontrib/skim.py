@@ -31,7 +31,7 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
     else:
       base = base_in['']
   else:
-    base = base_in
+    base   = base_in
 
   global is_cmd_cache_fresh
   bin   = XSH.commands_cache.lazy_locate_binary(base, ignore_alias=True)
