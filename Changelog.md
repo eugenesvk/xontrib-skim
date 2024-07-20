@@ -16,6 +16,9 @@ All notable changes to this project will be documented in this file
 <!-- - 🔒 __Security__ -->
   <!-- + vulnerabilities -->
 
+- 🐞 __Fixed__
+  + keybind sequences causing an error due to the parser trying to despace a list improperly
+
 [0.0.5]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.5
 ## [0.0.5]
   - __Changed__
