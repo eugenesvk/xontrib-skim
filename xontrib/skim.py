@@ -10,6 +10,7 @@ from xonsh.built_ins                 	import XSH
 from prompt_toolkit.keys             	import ALL_KEYS
 from xonsh.completers.path           	import complete_dir, _quote_paths
 from xonsh.parsers.completion_context	import CompletionContextParser
+from xonsh.procs                     	import executables
 
 __all__ = ()
 
