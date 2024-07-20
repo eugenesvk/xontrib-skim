@@ -8,5 +8,4 @@ jobs:
   testing:
     uses: xonsh/actions/.github/workflows/test-poetry-xontrib.yml@beb0a7c404eba6591cb8b1f8a38dd760ebbbb8f5
     with:
-      cache-dependency-path	: pyproject.toml
-      xontrib_name         	: skim
+      xontrib_name	: skim
