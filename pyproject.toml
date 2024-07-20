@@ -29,7 +29,7 @@ Code           	= "https://github.com/eugenesvk/xontrib-skim"
 
 [tool.poetry.dependencies]
 python	= ">=3.9,<4.0"
-xonsh 	= ">=0.18.0"
+xonsh 	= ">=0.18.2"
 prompt-toolkit = "^3.0.47"
 
 [tool.poetry.dev-dependencies]
