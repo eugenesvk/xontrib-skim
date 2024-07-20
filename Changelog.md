@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file
 
-[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.5...HEAD
+[unreleased]: https://github.com/eugenesvk/xontrib-skim/compare/0.0.6...HEAD
 ## [Unreleased]
 <!-- - ✨ __Added__ -->
   <!-- + new features -->
@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file
 <!-- - 🔒 __Security__ -->
   <!-- + vulnerabilities -->
 
+[0.0.6]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.6
+## [0.0.6]
 - 🐞 __Fixed__
   + keybind sequences causing an error due to the parser trying to despace a list improperly
 
