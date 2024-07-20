@@ -50,7 +50,14 @@ def get_bin(base_in): # (lazily 1st) get the full path to skim binary from xonsh
   else:
     return bin
 
-def skim_get_args(event, data_type): # get a list of skim arguments, combining defaults with user config
+from enum import auto, Flag, IntFlag
+class Opt(Flag): # extra options to override those derived from data sources
+  #↓ unique opt	          ↓ abbreviations
+  QueryNone    	= auto(); QP	= QueryNone # don't prefill Query for, eg, X_SKIM_KEY_HIST_CWD→ where your command is unlikely to be a path, but an actual command you want to execute in a different dir
+  #↓ combo     	abbreviations
+  # V          	=           X | S
+
+def skim_get_args(event, data_type,opts=Opt(0)): # get a list of skim arguments, combining defaults with user config
   buf = event.current_buffer
   if type(data_type) == str:
     data_type = [data_type]
@@ -148,10 +155,10 @@ def skim_proc_run(event,data_type,env=envx): # Run a skim process with default a
   skim_proc = subprocess.run(  skim_cmd,            stdout=PIPE, text=True, env=env)
   return skim_proc
 
-def skim_proc_open(event,data_type): # Create a skim process with default args and return it
+def skim_proc_open(event,data_type,opts=Opt(0)): # Create a skim process with default args and return it
   if not (bin := get_bin(base)):
     return
-  args = skim_get_args(event,data_type)
+  args = skim_get_args(event,data_type,opts)
   skim_cmd = [bin] + args
   skim_proc = subprocess.Popen(skim_cmd, stdin=PIPE,stdout=PIPE, text=True)
   return skim_proc
@@ -209,11 +216,12 @@ def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to
   if (histx := XSH.history) is None:
     return
   data_type = ['history','dir']
+  opts = Opt(0)
   if cd:
     data_type += ['cd']
   if (freq := envx.get("X_SKIM_CWD_FRQ",True)):
     data_type += ['freq']
-  skim_proc = skim_proc_open(event, data_type)
+  skim_proc = skim_proc_open(event, data_type,opts)
   re_deprefix = None
   if freq:
     re_deprefix = re_zoxide_index
