@@ -104,7 +104,7 @@ def skim_get_args(event, data_type,opts=Opt(0)): # get a list of skim arguments,
       skim_args += [
         "--no-sort"	, # don't sort the search result (normally used together with --tac)
       ]
-    if len(user_input := buf.text) > 0:
+    if len(user_input := buf.text) > 0 and not (opts & Opt.QueryNone):
       skim_args += [f"--query=^{user_input}"] # add existing user input as initial query
   elif 'zoxide' in data_type: #
     skim_args += [
@@ -219,6 +219,7 @@ def skim_get_history_cwd(event, cd=False): # Run skim, pipe xonsh CWD history to
   opts = Opt(0)
   if cd:
     data_type += ['cd']
+    opts |= Opt.QueryNone
   if (freq := envx.get("X_SKIM_CWD_FRQ",True)):
     data_type += ['freq']
   skim_proc = skim_proc_open(event, data_type,opts)
