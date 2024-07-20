@@ -22,6 +22,9 @@ All notable changes to this project will be documented in this file
   <!--   + 🔒  -->
   <!--   vulnerabilities -->
 
+  - __Changed__
+    + make `X_SKIM_KEY_HIST_CWD→` consistent with `X_SKIM_KEY_HIST_Z→` and not prefill skim's query with currently typed command line text
+
 [0.0.4]: https://github.com/eugenesvk/xontrib-skim/releases/tag/0.0.4
 ## [0.0.4]
   - __Fixed__
