@@ -5,16 +5,14 @@ Sets up keybinds to search various type of data: dirs/files, history of commands
 </p>
 
 
-## Installation
-
-To install use pip:
+## Install
 
 ```xsh
-xpip install xontrib-skim
+xpip install -U xontrib-skim
 # or: xpip install -U git+https://github.com/eugenesvk/xontrib-skim
 ```
 
-## Usage
+## Use
 
 Supported data sources:
 
